@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node { cursor: grab; fill: #e9f5ff; }
+        .link {   
+                  stroke-linecap: square; /* Extremos cuadrados */
+                  /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
+        svg { background: #0b0121; }
+        
+        .node-id {
+              
+              pointer-events: none;
+              font-family: "Consolas", monospace;
+              font-size: 14px;
+              fill: #FFF;
+            }
+
+.hidden {
+    display: none;
+}
+    </style>
+    
+</head>
+<body>
+    <svg></svg>
+    
+
+    <script>
+      fetch('projects.json') 
+        .then(response => response.json())
+        .then(data => {
+          const nodes = data.nodes;
+          const links = generateLinks(nodes);
+          const tagColors = {
+            "arq": "#FF6B6B",  // Rojo pastel
+            "inm": "#4ECDC4",  // Turquesa
+            "ins": "#45B7D1",  // Azul claro
+            "inv": "#96CEB4",  // Verde menta
+            "par": "#FFCCAD",  // Amarillo claro
+            "doc": "#D4A5A5"   // Rosa polvoriento
+          };
+
+        // Función mágica para generar links
+        function generateLinks(nodes) {
+            const links = [];
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                  const nodeA = nodes[i];
+                  const nodeB = nodes[j];
+                  const sharedTags = nodeA.tags.filter(tag => nodeB.tags.includes(tag));
+                    
+                    sharedTags.forEach((tag, index) => {
+                        let curvature;
+                        if (index === 0) {
+                          curvature = 1000; 
+                        } else {
+                            
+                          const adjustedIndex = index - 1; // Restamos 1 para empezar desde 0
+                          //curvature = (adjustedIndex % 2 === 0 ? 1 : -1) * (Math.floor(adjustedIndex / 2) + 1) * 5;
+                          curvature =  (Math.ceil(adjustedIndex / 2)) * 3;
+                        }
+                links.push({
+                        source: nodeA.id,
+                        target: nodeB.id,
+                        weight: sharedTags.length/2, // Número de tags compartidos
+                        tag: tag,
+                        curvature: curvature,
+                        order: index % 2
+                        });
+                    });
+                }
+            }
+            return links;
+        }
+
+
+        // Configurar SVG
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const svg = d3.select("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Crear simulación
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).strength(d => d.weight * 0.04))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02));
+
+        // Dibujar enlaces
+        const link = svg.append("g")
+            .selectAll("path")
+            .data(links)
+            .join("path")
+            .attr("class", "link")
+            .attr("stroke-width", 1)
+            .attr("stroke-opacity",0.2)
+            .attr("fill", "none")
+            .attr("stroke", d => tagColors[d.tag]);
+
+        function arcPath(d) {
+            const start = d.order === 0 ? { x: d.source.x, y: d.source.y } : { x: d.target.x, y: d.target.y };
+            const end = d.order === 0 ? { x: d.target.x, y: d.target.y } : { x: d.source.x, y: d.source.y };
+            const dx = end.x - start.x;
+            const dy = end.y - start.y;
+            const dr = Math.sqrt(dx * dx + dy * dy) * d.curvature; // Radio del arco
+    
+            return `
+                  M${start.x},${start.y}
+                  A${dr},${dr} 0 0,1 ${end.x},${end.y}
+                  `;
+          }
+
+          // Crear etiquetas
+
+          const labels = svg.append("g")
+              .selectAll("text")
+              .data(nodes)
+              .join("text")
+              .attr("class", "node-id")
+              .text(d =>`[${d.id}]`) // Mostrar el ID
+              .attr("text-anchor", "left")
+              .attr("dy", "-1em")
+              .attr("dx","1em")
+              
+              
+        // Dibujar nodos
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(nodes)
+            .join("circle")
+            .attr("class", "node")
+            .attr("r", 4)
+            .call(drag(simulation))
+            
+            .on("mouseover", (event, d) => {
+              labels.filter(labelD => labelD === d)
+              .text(`[${d.name}]`);
+              d3.select(event.currentTarget)
+              .transition()
+              .duration(50)
+              .attr("r", 10);
+              link.transition()
+                .duration(800)
+                .attr("stroke-opacity", l => 
+                (l.source.id === d.id || l.target.id === d.id) ? 0.9 : 0.1
+                );
+              
+              })
+            .on("mouseout", (event,d) => {
+                   labels.filter(labelD => labelD === d)
+                   .text(`[${d.id}]`);
+                   d3.select(event.currentTarget)
+                   .transition()
+                   .duration(450)
+                   .attr("r", 4);
+                   link.transition()
+                    .duration(800)
+                    .attr("stroke-opacity", 0.1);
+              });
+
+        
+
+            function fixBounds() {
+              const NODE_RADIUS = 25;
+              const width = window.innerWidth; 
+              const height = window.innerHeight; 
+
+              const graphNodes = simulation.nodes(); 
+
+              graphNodes.forEach((node) => {
+                  // Limitar posición X
+                  if (node.x - NODE_RADIUS < 0) {
+                      node.x = NODE_RADIUS;
+                      node.vx = 0;
+                  }
+                  if (node.x + NODE_RADIUS > width) {
+                      node.x = width - NODE_RADIUS;
+                      node.vx = 0;
+                  }
+                
+                  // Limitar posición Y
+                  if (node.y - NODE_RADIUS < 0) {
+                      node.y = NODE_RADIUS;
+                      node.vy = 0; 
+                  }
+                  if (node.y + NODE_RADIUS > height) {
+                      node.y = height - NODE_RADIUS;
+                      node.vy = 0; 
+                  }
+             });
+            }
+
+        // Actualizar posiciones
+        simulation.on("tick", () => {
+          fixBounds();
+          link.attr("d", arcPath); 
+
+          node.attr("cx", d => d.x)
+              .attr("cy", d => d.y);
+
+          labels
+              .attr("x", d => d.x)
+              .attr("y", d => d.y);
+
+          
+
+        });
+
+        function drag(simulation) {
+        return d3.drag()
+        .on("start", (event, d) => {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        })
+        .on("drag", (event, d) => {
+            d.fx = event.x;
+            d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        });
+}
+
+        
+      })
+    </script>
+</body>
+</html>

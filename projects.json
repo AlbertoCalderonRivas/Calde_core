@@ -1,0 +1,35 @@
+{
+    "nodes" : [
+        {"id":"01","name":"TFG","tags":["arq","inm","inv","par"]},
+        {"id":"02","name":"Guía del Estudiante","tags":["inm"]},
+        {"id":"03","name":"TFM: Basurero digital","tags":["inm","ins","inv","par"]},
+        {"id":"05","name":"PIP","tags":["inm","par","doc"]},
+        {"id":"06","name":"ArtificialLAN","tags":["arq","ins","inv","par"]},
+        {"id":"07","name":"UltraIcon","tags":["arq"]},
+        {"id":"08","name":"Kink-y","tags":["arq"]},
+        {"id":"09","name":"Hammam","tags":["arq","par"]},
+        {"id":"10","name":"Geyser Gayser","tags":["arq", "inv","par"]},
+        {"id":"11","name":"Kra.Atom","tags":["arq"]},
+        {"id":"12","name":"Balcón Dormidina","tags":["arq", "inv","par"]},
+        {"id":"13","name":"TFM: Habitar el Valle","tags":["arq", "ins","inv"]},
+        {"id":"14","name":"TFM: Fiesta de Órganos","tags":["ins","inv"]},
+        {"id":"15","name":"TFM: Scroll 2022","tags":["ins","inv"]},
+        {"id":"16","name":"Festival Máquina: escenografía '22","tags":["ins"]},
+        {"id":"17","name":"Festival Máquina: escenografía '24","tags":["ins"]},
+        {"id":"18","name":"Cementerio","tags":["arq","ins"]},
+        {"id":"19","name":"La Recolectora: Segona Residencia","tags":["arq","ins","inv","doc"]},
+        {"id":"20","name":"La Recolectora: Jornadas Voltaicas","tags":["arq","ins","inv","doc"]},
+        {"id":"21","name":"No tot son flors et violes","tags":["ins","inv","doc"]},
+        {"id":"22","name":"Balcón retráctil","tags":["arq","ins"]},
+        {"id":"23","name":"Ojo x ojO","tags":["arq","ins"]},
+        {"id":"24","name":"Umbrales","tags":["inm","ins","inv"]},
+        {"id":"25","name":"Bathroom Project","tags":["ins"]},
+        {"id":"26","name":"Patatas Fritas","tags":["ins"]},
+        {"id":"27","name":"Reforma Vía Láctea","tags":["arq"]},
+        {"id":"28","name":"Reforma integral Gallur","tags":["arq"]},
+        {"id":"29","name":"Urko","tags":["arq","inv","par"]}
+
+    ]
+    
+    
+}
