@@ -26,12 +26,13 @@
             background-color: #000000;
             font-family: "Consolas", monospace;
             font-style: initial;
-            font-size: 16px;
+            font-size: 12px;
            
             
         }
         h1{
             color:rgb(255, 255, 255);
+            margin-left: 1vw;
         }
         .node-id {
               
@@ -83,7 +84,7 @@
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
-    const NODE_FORCE = -160; //-1600
+    const NODE_FORCE = -260; //-1600
     const NODE_FORCE_MOBILE = -30; //-300
     
     const LINK_BASE_OPACITY = 0.2;
@@ -145,8 +146,8 @@
                   node.y = 4*NODE_R_BOUND;
                   node.vy = 0; 
               }
-              if (node.y + 4*NODE_R_BOUND > height) {
-                  node.y = height - 4*NODE_R_BOUND;
+              if (node.y + 8*NODE_R_BOUND > height) {
+                  node.y = height - 8*NODE_R_BOUND;
                   node.vy = 0; 
               }
          });
