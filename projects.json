@@ -4,7 +4,7 @@
         {"id":"02","name":"Guía del Estudiante","tags":["inm"]},
         {"id":"03","name":"TFM: Basurero digital","tags":["inm","ins","inv","par"]},
         {"id":"05","name":"PIP","tags":["inm","par","doc"]},
-        {"id":"06","name":"ArtificialLAN","tags":["arq","ins","inv","par"]},
+        {"id":"06","name":"Artificial LAN","tags":["arq","ins","inv","par"]},
         {"id":"07","name":"UltraIcon","tags":["arq"]},
         {"id":"08","name":"Kink-y","tags":["arq"]},
         {"id":"09","name":"Hammam","tags":["arq","par"]},
