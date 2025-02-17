@@ -66,7 +66,7 @@
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
-    const NODE_R_BOUND = 25;
+    
     const LINK_BASE_OPACITY = 0.2;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
     let svg, simulation,width, height;
@@ -103,7 +103,7 @@
     
     function fixBounds() {
               
-              
+            const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
 
               const graphNodes = simulation.nodes(); 
 
@@ -113,8 +113,8 @@
                       node.x = NODE_R_BOUND;
                       node.vx = 0;
                   }
-                  if (node.x + NODE_R_BOUND > width) {
-                      node.x = width - NODE_R_BOUND;
+                  if (node.x + NODE_R_BOUND > width - 7*NODE_R_BOUND) {
+                      node.x = width-8*NODE_R_BOUND;
                       node.vx = 0;
                   }
                 
