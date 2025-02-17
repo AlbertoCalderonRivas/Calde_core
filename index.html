@@ -11,14 +11,28 @@
                   /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
         svg { background: #050010;
             width: 98vw; 
-            height: 98vh; 
-            margin: 5px auto; 
+            height: 94vh; 
+            margin: 0vh auto; 
             border-style:solid;
-            border-color: white;
+            border-color: rgb(211, 154, 247);
             border-width: 2px;
             display: block; 
         }
-        
+
+        .header{
+            height: 3vh;
+            width: 100%;
+            margin: 0vh auto;
+            background-color: #000000;
+            font-family: "Consolas", monospace;
+            font-style: initial;
+            font-size: 16px;
+           
+            
+        }
+        h1{
+            color:rgb(255, 255, 255);
+        }
         .node-id {
               
               pointer-events: none;
@@ -32,7 +46,7 @@
         }
 
         #mindmap {
-            background: #402c6c
+            background: #000000
             
         }
 
@@ -44,32 +58,38 @@
 
         body {
             margin: 0;
-            overflow: hidden; /* Oculta el scroll no deseado */
+            /*overflow: hidden; /* Oculta el scroll no deseado */
             background: #000000;
         }
     </style>
     
 </head>
 <body>
-
+    <div class="header"><h1>>calde_core</h1></div>
     <div id="mindmap">
 
         <svg></svg>
+        <p>hola</p>
     </div>
-    
+    <div>
+        <h1>SECCION</h1>
+    </div>
 
     <script>
 
     //Variables    
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    
     const NODE_R_BASE = 4; // Tamaño base
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
+    const NODE_FORCE = -160; //-1600
+    const NODE_FORCE_MOBILE = -30; //-300
     
     const LINK_BASE_OPACITY = 0.2;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
-    let svg, simulation,width, height;
+    const LINK_FORCE_MULTIPLICATOR = 0.004; //0.04
+    let svg, simulation,width, height, isMobile;
 
     fetch('projects.json') //contiene un array con todos los proyectos
     .then(response => response.json())
@@ -90,6 +110,7 @@
 
     function initSVG() {
         //inicializa el svg y aplica una primera fuerza al centro
+        isMobile = window.matchMedia("(max-width: 768px)").matches;
         width = window.innerWidth;
         height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
@@ -98,38 +119,54 @@
     
     function restartSimulation() {
         //reinicia la simulación (en eventos de resize)
+        
         simulation.alpha(0.5).restart();
     }
     
     function fixBounds() {
               
-            const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
+        const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
 
-              const graphNodes = simulation.nodes(); 
+          const graphNodes = simulation.nodes();
 
-              graphNodes.forEach((node) => {
-                  // Limitar posición X
-                  if (node.x - NODE_R_BOUND < 0) {
-                      node.x = NODE_R_BOUND;
-                      node.vx = 0;
-                  }
-                  if (node.x + NODE_R_BOUND > width - 7*NODE_R_BOUND) {
-                      node.x = width-8*NODE_R_BOUND;
-                      node.vx = 0;
-                  }
-                
-                  // Limitar posición Y
-                  if (node.y - NODE_R_BOUND < 0) {
-                      node.y = NODE_R_BOUND;
-                      node.vy = 0; 
-                  }
-                  if (node.y + NODE_R_BOUND > height) {
-                      node.y = height - NODE_R_BOUND;
-                      node.vy = 0; 
-                  }
-             });
-            }
-    
+          graphNodes.forEach((node) => {
+              // Limitar posición X
+              if (node.x - NODE_R_BOUND < 0) {
+                  node.x = NODE_R_BOUND;
+                  node.vx = 0;
+              }
+              if (node.x + 8*NODE_R_BOUND > width ) {
+                  node.x = width-8*NODE_R_BOUND;
+                  node.vx = 0;
+              }
+            
+              // Limitar posición Y
+              if (node.y - 4*NODE_R_BOUND < 0) {
+                  node.y = 4*NODE_R_BOUND;
+                  node.vy = 0; 
+              }
+              if (node.y + 4*NODE_R_BOUND > height) {
+                  node.y = height - 4*NODE_R_BOUND;
+                  node.vy = 0; 
+              }
+         });
+    }
+  
+    function updateResponsiveProperties() {
+      // Actualiza el flag
+      isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+      // Actualiza las fuerzas que dependen de isMobile
+      simulation.force("charge", d3.forceManyBody().strength(isMobile ? NODE_FORCE_MOBILE : NODE_FORCE));
+        
+      // Actualiza el radio de los nodos
+      svg.selectAll("circle")
+        .transition()
+        .duration(200)
+        .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE);
+        
+      // Otras actualizaciones que necesites...
+    }
     //funciones para links
     
     function generateLinks(nodes) {
@@ -248,8 +285,8 @@
 
         // Crear simulación
         simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).strength(d => d.weight * 0.04))
-            .force("charge", d3.forceManyBody().strength(-300))
+            .force("link", d3.forceLink(links).id(d => d.id).strength(d => d.weight * LINK_FORCE_MULTIPLICATOR))
+            .force("charge", d3.forceManyBody().strength(isMobile? NODE_FORCE_MOBILE : NODE_FORCE))
             .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02));
 
         // Dibujar enlaces
@@ -313,8 +350,10 @@
         initSVG();
         window.addEventListener("resize", () => {
                     initSVG();
+                    updateResponsiveProperties();
                     restartSimulation();
         });
+
         svg.on("touchstart", (event) => {
         if (event.target.tagName === "svg") {
             link.transition().attr("stroke-opacity", LINK_BASE_OPACITY);
