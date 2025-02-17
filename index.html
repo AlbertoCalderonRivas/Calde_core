@@ -67,6 +67,8 @@
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
     const NODE_R_BOUND = 25;
+    const LINK_BASE_OPACITY = 0.2;
+    const LINK_HIGHLIGHT_OPACITY = 0.9;
     let svg, simulation,width, height;
 
     fetch('projects.json') //contiene un array con todos los proyectos
@@ -190,7 +192,7 @@
     link.transition()
         .duration(800)
         .attr("stroke-opacity", l => 
-            (l.source.id === d.id || l.target.id === d.id) ? 0.9 : 0.1
+            (l.source.id === d.id || l.target.id === d.id) ? LINK_HIGHLIGHT_OPACITY : LINK_BASE_OPACITY
         );
     }
 
@@ -204,7 +206,7 @@
             .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE); // Tamaño móvil/desktop
         link.transition()
             .duration(800)
-            .attr("stroke-opacity", 0.1);
+            .attr("stroke-opacity", LINK_BASE_OPACITY);
     }
 
 
@@ -215,7 +217,10 @@
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
-
+           
+            if (isMobile) {
+            handleNodeHover(event, d);
+            }
             
 
         })
@@ -228,7 +233,10 @@
             if (!event.active) simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
-
+     
+         if (isMobile) {
+            handleNodeUnhover(event, d);
+            }
 
         });
         }
@@ -251,7 +259,7 @@
             .join("path")
             .attr("class", "link")
             .attr("stroke-width", 1)
-            .attr("stroke-opacity",0.2)
+            .attr("stroke-opacity",LINK_BASE_OPACITY)
             .attr("fill", "none")
             .attr("stroke", d => tagColors[d.tag]);
 
@@ -309,7 +317,7 @@
         });
         svg.on("touchstart", (event) => {
         if (event.target.tagName === "svg") {
-            link.transition().attr("stroke-opacity", 0.1);
+            link.transition().attr("stroke-opacity", LINK_BASE_OPACITY);
         }
     });
 
