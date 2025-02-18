@@ -1,0 +1,95 @@
+.header{
+
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    
+    z-index: 10;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+
+.logo_container{
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-image: url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTQyYXNoMDBnazN0N2Jod3V3cHduem9tNGtmdmo2Mms5cG96enR2eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ela1t1t9OPovUAg6n7/giphy.gif);
+    background-size: cover;
+    background-clip: content-box;
+    -moz-background-clip: text;
+    -webkit-background-clip: text;
+
+    font-size: 0; /*controlado por script*/
+    margin-top: 0; /*controlado por script*/
+    transition: font-size 1.2s ease, margin-top 1.2s ease;
+    
+    
+}
+
+
+
+.logo_container h1{
+    color: #f94bd7a9;
+    display: table-cell;
+    
+    font-family: "Pixeled";
+    font-style: normal;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-shadow: 0px 0px 0 black;
+    transition: text-shadow 0.3s ease;
+}
+
+.logo_container h1:hover{
+    text-shadow: none;
+    transition: text-shadow 0.3s ease;
+    
+}
+
+
+
+.navigation {
+
+    display: flex;
+     
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    font-size: 1.3em;
+    right: 3dvw; 
+    transition: font-size 1.2s ease;
+    
+}
+
+.navigation a{
+    text-decoration: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    height: 100%;
+    display: table;
+   
+    
+    transition: padding 1.2s ease;
+    
+}
+
+.navigation a li{
+    display: table-cell;
+    vertical-align: top;
+    height: 100%;
+    color: white;
+    font-family: "Pixeled";
+    
+    
+    
+}

@@ -3,78 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>𐙚‧₊˚⋆calde_core⋆˚₊‧𐙚</title>
+    <link rel="icon" href="assets\favicon.ico" type="image/x-icon">
+    <!--CSS-->
+    <link rel="stylesheet" href="css\style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/noise.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!--JS-->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        .node { cursor: grab; fill: #e9f5ff; }
-        .link {   
-                  stroke-linecap: square; /* Extremos cuadrados */
-                  /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
-        svg { background: #050010;
-            width: 98vw; 
-            height: 94vh; 
-            margin: 0vh auto; 
-            border-style:solid;
-            border-color: rgb(211, 154, 247);
-            border-width: 2px;
-            display: block; 
-        }
-
-        .header{
-            height: 3vh;
-            width: 100%;
-            margin: 0vh auto;
-            background-color: #000000;
-            font-family: "Consolas", monospace;
-            font-style: initial;
-            font-size: 12px;
-           
-            
-        }
-        h1{
-            color:rgb(255, 255, 255);
-            margin-left: 1vw;
-        }
-        .node-id {
-              
-              pointer-events: none;
-              font-family: "Consolas", monospace;
-              font-size: 15px;
-              fill: #ffffff;
-            }
-
-        @media (max-width: 768px) {
-        .node-id { font-size: 13px; }
-        }
-
-        #mindmap {
-            background: #000000
-            
-        }
-
-        .hidden {
-            display: none;
-        }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/header.js" defer=""></script>
 
     
-
-        body {
-            margin: 0;
-            /*overflow: hidden; /* Oculta el scroll no deseado */
-            background: #000000;
-        }
-    </style>
     
 </head>
-<body>
-    <div class="header"><h1>>calde_core</h1></div>
-    <div id="mindmap">
 
-        <svg></svg>
+
+<body>
+    <main>
+
+        <div class="noise"></div>
+
+        <div class="header">
+            <div class="logo_container">
+                <h1 onclick="glitch()">>calde_core</h1>
+            </div>
+            
+            
+            <ul class="navigation" >
+                <a href=".work" style="padding: 0px 20px;"><li></li></a>
+                <a href=".Courses" style="padding: 0px 20px;"><li></li></a>
+                <a href=".Blog" style="padding: 0px 20px;"><li></li></a>
+                <a href=".aboutMe" style="padding: 0px 20px;"><li></li></a>
+                
+            </ul>
+        </div>
+
+        <div id="filters">
+            <div class="filter-container">
+                <button class="filter-btn" data-tag="arq">ARQ</button>
+                <button class="filter-btn" data-tag="inm">INM</button>
+                <button class="filter-btn" data-tag="ins">INS</button>
+                <button class="filter-btn" data-tag="inv">INV</button>
+                <button class="filter-btn" data-tag="par">PAR</button>
+                <button class="filter-btn" data-tag="doc">DOC</button>
+            </div>
+        </div>
+
+        <div id="mindmap"> 
+                 <svg></svg>
+        </div>
         
-    </div>
-    <div>
-        <h1>SECCION</h1>
-    </div>
+            
+    </main>
+
+        
+
 
     <script>
 
@@ -84,19 +71,28 @@
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
-    const NODE_FORCE = -260; //-1600
-    const NODE_FORCE_MOBILE = -30; //-300
+    const NODE_FORCE = -280;
+    const NODE_FORCE_MOBILE = -30;
     
     const LINK_BASE_OPACITY = 0.2;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
-    const LINK_FORCE_MULTIPLICATOR = 0.004; //0.04
+    const LINK_FORCE_MULTIPLICATOR = 0.004;
     let svg, simulation,width, height, isMobile;
+
+    const tags = ["arq", "inm", "ins", "inv", "par", "doc"];
+    let activeTags = new Set(); //lista de tags activos 
+    let selectedNodes = new Set();
+   
 
     fetch('projects.json') //contiene un array con todos los proyectos
     .then(response => response.json())
     .then(data => {
     const nodes = data.nodes;
-    const links = generateLinks(nodes);
+    
+    const links = generateLinks(nodes); //esto hay que cambiarlo ------------
+
+    createFilterButtons();
+
     const tagColors = {
       "arq": "#FF6B6B",  // Rojo pastel
       "inm": "#4ECDC4",  // Turquesa
@@ -119,9 +115,8 @@
     }
     
     function restartSimulation() {
-        //reinicia la simulación (en eventos de resize)
-        
-        simulation.alpha(0.5).restart();
+
+        simulation.alpha(1).restart();
     }
     
     function fixBounds() {
@@ -136,18 +131,18 @@
                   node.x = NODE_R_BOUND;
                   node.vx = 0;
               }
-              if (node.x + 8*NODE_R_BOUND > width ) {
-                  node.x = width-8*NODE_R_BOUND;
+              if (node.x + 6*NODE_R_BOUND > width ) {
+                  node.x = width-6*NODE_R_BOUND;
                   node.vx = 0;
               }
             
               // Limitar posición Y
-              if (node.y - 4*NODE_R_BOUND < 0) {
-                  node.y = 4*NODE_R_BOUND;
+              if (node.y - 2*NODE_R_BOUND < 0) {
+                  node.y = 2*NODE_R_BOUND;
                   node.vy = 0; 
               }
-              if (node.y + 8*NODE_R_BOUND > height) {
-                  node.y = height - 8*NODE_R_BOUND;
+              if (node.y + 7*NODE_R_BOUND > height) {
+                  node.y = height - 7*NODE_R_BOUND;
                   node.vy = 0; 
               }
          });
@@ -166,13 +161,120 @@
         .duration(200)
         .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE);
         
-      // Otras actualizaciones que necesites...
+      
     }
+    
+    //funciones para filtrado de tags
+
+    function createFilterButtons() {
+    activeTags.clear();
+    const container = d3.select(".filter-container");
+    
+    container.selectAll(".filter-btn")
+        .data(tags)
+        .join("button")
+        .attr("class", "filter-btn")
+        .text(d => d.toUpperCase())
+        .attr("data-tag", d => d)
+        .on("click", function(event, tag) {
+            d3.select(this).classed("active", !d3.select(this).classed("active"));
+            if(activeTags.has(tag)) {
+                activeTags.delete(tag);
+            } else {
+                activeTags.add(tag);
+            }
+            
+            
+           console.log("Tags activos:", Array.from(activeTags));
+            
+            updateNodes();
+        });
+    }
+
+    function updateNodes() {
+
+        simulation.stop();
+
+        selectedNodes.clear();
+
+            nodes.forEach(node => {
+                const hasAnyTag = Array.from(activeTags).some(tag => 
+                    node.tags.includes(tag) 
+                );
+                if (hasAnyTag) selectedNodes.add(node);
+                console.log(selectedNodes);
+        
+            });
+
+            
+
+        const filteredNodes = Array.from(selectedNodes);
+        const newLinks = generateLinks(filteredNodes);
+
+        //Reiniciar posiciones de los nodos
+        filteredNodes.forEach(node => {
+        node.x = width / 2;  // Centrar nodos
+        node.y = height / 2;
+        delete node.vx;     // Eliminar velocidad anterior
+        delete node.vy;
+        });
+
+        // Actualizar simulación
+        simulation.nodes(filteredNodes);
+        simulation.force("link").links(newLinks);
+
+        // Actualizar enlaces
+        link.data(newLinks, d => `${d.source.id}-${d.target.id}-${d.tag}-${d.curvature}`)
+            .join(
+                enter => enter.append("path")
+                    .attr("class", "link")
+                    .attr("stroke", d => tagColors[d.tag])
+                    .attr("stroke-opacity", LINK_BASE_OPACITY),
+                update => update,
+                exit => exit.remove()
+            );
+
+        // Actualizar nodos
+        node.data(filteredNodes, d => d.id)
+            .join(
+                enter => enter.append("circle")
+                    .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
+                    .call(drag(simulation))
+                    .on("mouseover touchstart", handleNodeHover)
+                    .on("mouseout touchend", handleNodeUnhover),
+                update => update,
+                exit => exit.remove()
+            );
+
+        // Actualizar etiquetas
+        labels.data(filteredNodes, d => d.id)
+        .join(
+            enter => enter.append("text")
+                .attr("class", "node-id")
+                .text(d => `[${d.id}]`)
+                .attr("text-anchor", "left")
+                .attr("dy", "-0.5em")
+                .attr("dx", "0.5em"),
+            update => update,
+            exit => exit.remove()
+        );
+
+
+        restartSimulation();
+        simulation.tick(50);
+        simulation.tick(0);
+        console.log("Nodos filtrados:", filteredNodes);
+          //  console.log("Enlaces generados:", newLinks);
+            //console.log("Claves de nodos:", filteredNodes.map(n => n.id));
+            //console.log("Claves de enlaces:", newLinks.map(l => `${l.source.id}-${l.target.id}-${l.tag}`));
+    }
+    
     //funciones para links
     
     function generateLinks(nodes) {
         // Función mágica para generar links
         const links = [];
+        const nodeMap = new Map(nodes.map(n => [n.id, n]));
         
         for (let i = 0; i < nodes.length; i++) {
             for (let j = i + 1; j < nodes.length; j++) {
@@ -186,14 +288,13 @@
                         curvature = 1000; 
                     } else {
                         
-                        const adjustedIndex = index - 1; // Restamos 1 para empezar desde 0
-                        //curvature = (adjustedIndex % 2 === 0 ? 1 : -1) * (Math.floor(adjustedIndex / 2) + 1) * 5;
+                        const adjustedIndex = index - 1; 
                         curvature =  (Math.ceil(adjustedIndex / 2)) * 3;
                     }
                     links.push({
                         source: nodeA.id,
                         target: nodeB.id,
-                        weight: sharedTags.length/2, // Número de tags compartidos
+                        weight: sharedTags.length/2,
                         tag: tag,
                         curvature: curvature,
                         order: index % 2
@@ -246,7 +347,6 @@
             .duration(800)
             .attr("stroke-opacity", LINK_BASE_OPACITY);
     }
-
 
     function drag(simulation) {
         return d3.drag()
