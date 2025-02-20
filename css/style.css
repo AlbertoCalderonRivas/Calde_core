@@ -24,6 +24,7 @@ svg { background: #050010;
     display: block; 
 }
 .node { cursor: grab; fill: #e9f5ff; }
+
 .link {   
           stroke-linecap: square; /* Extremos cuadrados */
           /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
@@ -47,7 +48,7 @@ h1{
 #mindmap {
     background: #000000;
     position: absolute;
-    top: 55px; 
+    top: 45px; 
     left: 5px;
     right: 10px;
     bottom: 10px;

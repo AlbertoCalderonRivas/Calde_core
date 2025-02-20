@@ -185,8 +185,6 @@
             }
             
             
-           console.log("Tags activos:", Array.from(activeTags));
-            
             updateNodes();
         });
     }
@@ -195,20 +193,22 @@
 
         simulation.stop();
 
-        selectedNodes.clear();
 
-            nodes.forEach(node => {
-                const hasAnyTag = Array.from(activeTags).some(tag => 
-                    node.tags.includes(tag) 
-                );
-                if (hasAnyTag) selectedNodes.add(node);
-                console.log(selectedNodes);
-        
-            });
+        // Si no hay filtros activos, se muestran todos los nodos
+        const filteredNodes = activeTags.size === 0
+          ? nodes.slice()
+          : nodes.filter(node =>
+              Array.from(activeTags).some(tag => node.tags.includes(tag))
+            );
 
-            
+        // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
+        if (filteredNodes.length === 0) {
+          console.warn("No hay nodos que cumplan los filtros activos:", Array.from(activeTags));
+          // Opcional: puedes optar por mostrar todos los nodos en lugar de ninguno
+          filteredNodes = nodes.slice();
+        }
 
-        const filteredNodes = Array.from(selectedNodes);
+
         const newLinks = generateLinks(filteredNodes);
 
         //Reiniciar posiciones de los nodos
@@ -224,21 +224,25 @@
         simulation.force("link").links(newLinks);
 
         // Actualizar enlaces
-        link.data(newLinks, d => `${d.source.id}-${d.target.id}-${d.tag}-${d.curvature}`)
+        link = link.data(newLinks, d => `${d.source.id}-${d.target.id}-${d.tag}-${d.curvature}`)
             .join(
                 enter => enter.append("path")
                     .attr("class", "link")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "none")
                     .attr("stroke", d => tagColors[d.tag])
                     .attr("stroke-opacity", LINK_BASE_OPACITY),
                 update => update,
                 exit => exit.remove()
             );
 
+
         // Actualizar nodos
-        node.data(filteredNodes, d => d.id)
+        node = node.data(filteredNodes, d => d.id)
             .join(
                 enter => enter.append("circle")
                     .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
+                    .attr("class", "node")
                     .call(drag(simulation))
                     .on("mouseover touchstart", handleNodeHover)
                     .on("mouseout touchend", handleNodeUnhover),
@@ -247,7 +251,7 @@
             );
 
         // Actualizar etiquetas
-        labels.data(filteredNodes, d => d.id)
+        labels = labels.data(filteredNodes, d => d.id)
         .join(
             enter => enter.append("text")
                 .attr("class", "node-id")
@@ -261,12 +265,7 @@
 
 
         restartSimulation();
-        simulation.tick(50);
-        simulation.tick(0);
-        console.log("Nodos filtrados:", filteredNodes);
-          //  console.log("Enlaces generados:", newLinks);
-            //console.log("Claves de nodos:", filteredNodes.map(n => n.id));
-            //console.log("Claves de enlaces:", newLinks.map(l => `${l.source.id}-${l.target.id}-${l.tag}`));
+
     }
     
     //funciones para links
@@ -349,8 +348,18 @@
     }
 
     function drag(simulation) {
+
+        const dragThreshold = 5;
+
         return d3.drag()
         .on("start", function(event, d) {
+
+            //Se guarda la posición inicial
+            d.dragged = false;
+            d.startX = event.x;
+            d.startY = event.y;
+
+
             event.sourceEvent.preventDefault(); //esto evita scroll en moviles, quiza haya que quitarlo
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
@@ -363,6 +372,13 @@
 
         })
         .on("drag", (event, d) => {
+            if(!d.dragged){
+                const dx = event.x - d.startX;
+                const dy = event.y - d.startY;
+                if (Math.sqrt(dx * dx + dy * dy) > dragThreshold) {
+                d.dragged = true;
+            }
+            }
             d.fx = event.x;
             d.fy = event.y;
             link.attr("d", arcPath);
@@ -375,6 +391,11 @@
          if (isMobile) {
             handleNodeUnhover(event, d);
             }
+           
+         if (!d.dragged && d.link) {
+            console.log("Nodo clickeado:", d, "Redirigiendo a:", d.link);
+         window.location.href = d.link;
+         }
 
         });
         }
@@ -391,7 +412,7 @@
             .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02));
 
         // Dibujar enlaces
-        const link = svg.append("g")
+        let link = svg.append("g")
             .selectAll("path")
             .data(links)
             .join("path")
@@ -404,7 +425,7 @@
 
 
         // Crear etiquetas
-        const labels = svg.append("g")
+        let labels = svg.append("g")
             .selectAll("text")
             .data(nodes)
             .join("text")
@@ -416,7 +437,7 @@
               
               
         // Dibujar nodos
-        const node = svg.append("g")
+        let node = svg.append("g")
             .selectAll("circle")
             .data(nodes)
             .join("circle")
@@ -448,7 +469,7 @@
 
 
 
-        initSVG();
+        //initSVG();
         window.addEventListener("resize", () => {
                     initSVG();
                     updateResponsiveProperties();
