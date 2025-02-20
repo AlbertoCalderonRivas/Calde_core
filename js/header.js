@@ -27,9 +27,10 @@ function adjustLogoFontSize() {
         // Pantallas grandes
         logo.style.fontSize = '0.7em'; 
         logo.style.marginTop = '0.4em';
+                menu.style.marginTop = '0.5em'
         menu.style.fontSize = '1em';
         menuLinks.forEach(link => {
-            link.style.padding = '0px 10px';})
+            link.style.padding = '0px 8px';})
 
 
         menuItems[0].textContent = 'Works';

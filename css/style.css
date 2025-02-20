@@ -9,85 +9,36 @@
 
 body {
     margin: 0;
-    overflow: hidden; /* Oculta el scroll no deseado */
+    overflow: hidden;
     background: #000000;
 }
 
-
-svg { background: #050010;
-    width: 100%;
-    height: 100%;
-    margin: 0vh auto; 
-    border-style:solid;
-    border-color: rgb(211, 154, 247);
-    border-width: 2px;
-    display: block; 
-}
-.node { cursor: grab; fill: #e9f5ff; }
-
-.link {   
-          stroke-linecap: square; /* Extremos cuadrados */
-          /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
-
-h1{
-    color:rgb(255, 255, 255);
-    margin-left: 1vw;
-}
-.node-id {
-      
-      pointer-events: none;
-      font-family: "Consolas", monospace;
-      font-size: 15px;
-      fill: #ffffff;
-    }
-
-@media (max-width: 768px) {
-.node-id { font-size: 13px; }
-}
-
-#mindmap {
-    background: #000000;
-    position: absolute;
-    top: 45px; 
-    left: 5px;
-    right: 10px;
-    bottom: 10px;
-    
-}
-
-.hidden {
-    display: none;
-}
-
-#filters {
+#scroll-container {
     position: fixed;
-   bottom: 20px;
-    left: 20px;
-    z-index: 1000;
+    bottom: 0;
+    width: 100%;
+
+    white-space: nowrap;
+    color:rgb(158, 158, 158);
+    z-index: 100;
 }
 
-.filter-container {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    max-width: 400px;
+#scroll-text{
+    display: inline-block;
+    padding-bottom:3px;
+    user-select: none;
+    font-family: 'Courier', monospace;
+    font-size: 17px;
+    
+    animation: scroll-left 300s linear infinite;
+
 }
 
-.filter-btn {
-    padding: 6px 12px;
-    border: 1px solid #ae00ff;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s;
-    border-radius: 2px;
-    font-family: 'Pixeled', monospace;
-    font-size: 12px;
+@keyframes scroll-left {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
-
-.filter-btn.active {
-    background: #4ECDC4;
-    color: #000;
-    border-color: #4ECDC4;
-}
-
