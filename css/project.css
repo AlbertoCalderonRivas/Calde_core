@@ -1,7 +1,9 @@
 body{
-    overflow: none;
+    overflow: hidden;
 }
-
+::-webkit-scrollbar {
+    display: none;
+}
 
 
 #boxContent{
@@ -13,22 +15,160 @@ body{
     right: 10px;
     bottom: 10px;
     border-style:solid;
-    border-color: rgb(211, 154, 247);
-    border-width: 2px;
+    border:2px solid rgb(211, 154, 247);
     padding: 10px;
+    display: flex;
+    
 
 }
 .content{
-    /*padding: 10px;*/
+
     width: 100%;
     height: 100%;
     margin: 0vh auto; 
-    overflow:scroll;
-    display: block; 
+    display: flex; 
+    gap: 20px;
+}
+.content-top{
+    height: 18vh;
 }
 
-p{
+.content-data{
+    flex: 0 0 50%; 
+    max-width: 900px;
+    height: 100%;
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    margin-left: 5vw;
+    order: 1;
+}
+ .content-text {
+    flex: 1; 
+    min-width: 400px;
+    max-width: 800px;
+    height: 100%;
+    margin-right: 5vw;
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    order:2;
+}
+
+@media (max-width: 767px) {
+    .content {
+        flex-direction: column; 
+        gap: 10px; 
+    }
+
+    .content-data, .content-text {
+        margin: 0;
+        flex: none; 
+        width: 100%;
+        height: auto; 
+        overflow-y: visible;
+    }
+
+    .content-data {
+        order: 2; 
+    }
+
+    .content-text {
+        order: 1; 
+    }
+
+    #boxContent {
+        overflow-y: auto;
+    }
+}
+
+
+/* Asegurar compatibilidad con WebKit */
+.content-data::-webkit-scrollbar, 
+.content-text::-webkit-scrollbar {
+    display: none;
+}
+
+
+h2{
     font-family: 'Pixeled',monospace;
     text-transform: uppercase;
     color: white;
+    user-select: none;
+    font-size: clamp(1.0rem,1.2vw,1.5rem)
+    
+}
+
+
+p{
+    padding: 0;
+    font-family: 'Consolas',monospace;
+    color: white;
+    user-select: none;
+    line-height: 1.2em;
+    margin: 0.6em;
+    margin-top:-0.20em;
+}
+.image-container{
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    border: solid 2px rgb(159, 119, 172);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    text-align: right; /* Centra el texto dentro del figcaption */
+}
+.image-container br{
+    line-height: 5px;
+}
+ img {
+
+    width: 100%;
+    height: auto;
+    opacity: 0; /* Inicialmente transparentes */
+    filter: grayscale(100%) contrast(500%) blur(3px); /* Exageramos contraste y blur */
+    image-rendering: pixelated; /* Pixelado forzado */
+    animation: revealImage 3s ease forwards;
+    will-change: filter, opacity;
+}
+
+
+
+@keyframes revealImage {
+    0% {
+        filter: grayscale(100%) contrast(500%) blur(50px); /* Máximo pixelado */
+        opacity: 0;
+    }
+    100% {
+        filter: grayscale(0%) contrast(100%) blur(0); /* Estado natural */
+        opacity: 1;
+    }
+}
+
+.image-container p {
+    border: solid 2px rgb(159, 119, 172);
+    color: grey;
+    margin: 5px;
+    margin-right: -10px;
+
+    font-size: small;
+
+}
+
+#tag-arq{
+    color:#ff56b6;
+}
+#tag-inm{
+    color:#47dba2;
+}
+#tag-ins{
+    color:#45B7D1;
+}
+#tag-inv{
+    color:#7f4ed4;
+}
+#tag-par{
+    color:#fcd465;
 }

@@ -5,15 +5,15 @@
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
     const NODE_R_ZOOM_MOBILE = 8;
-    const NODE_FORCE = -280;
+    const NODE_FORCE = -180;
     const NODE_FORCE_MOBILE = -30;
     
-    const LINK_BASE_OPACITY = 0.2;
+    const LINK_BASE_OPACITY = 0.1;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
     const LINK_FORCE_MULTIPLICATOR = 0.004;
     let svg, simulation,width, height, isMobile;
 
-    const tags = ["arq", "inm", "ins", "inv", "par", "doc"];
+    const tags = ["arq", "inm", "ins", "inv", "par"];
     let activeTags = new Set(); //lista de tags activos 
     window.selectedNodes = new Set();
    
@@ -28,12 +28,11 @@
     createFilterButtons();
 
     const tagColors = {
-      "arq": "#FF6B6B",  // Rojo pastel
-      "inm": "#4ECDC4",  // Turquesa
-      "ins": "#45B7D1",  // Azul claro
-      "inv": "#96CEB4",  // Verde menta
-      "par": "#FFCCAD",  // Amarillo claro
-      "doc": "#D4A5A5"   // Rosa polvoriento
+      "arq": "#ff56b6",  
+      "inm": "#47dba2",  
+      "ins": "#45B7D1",  
+      "inv": "#7f4ed4",  
+      "par": "#fcd465", 
     };
 
 
@@ -221,8 +220,8 @@
                         curvature = 1000; 
                     } else {
                         
-                        const adjustedIndex = index - 1; 
-                        curvature =  (Math.ceil(adjustedIndex / 2)) * 3;
+                        const adjustedIndex = index - 0; 
+                        curvature =  (Math.ceil(adjustedIndex / 2)) * 9;
                     }
                     links.push({
                         source: nodeA.id,
@@ -283,7 +282,7 @@
 
     function drag(simulation) {
 
-        const dragThreshold = 5;
+        const dragThreshold = 2;
 
         return d3.drag()
         .on("start", function(event, d) {
