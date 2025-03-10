@@ -56,9 +56,9 @@
                     </div>
                     <div class="image-container">
                         <img src="..\assets\P_TFG\portada.png">
-                        <figcaption>
-                            <p></p>
-                        </figcaption>
+                        
+                            <span id="space"></span>>
+                        
                         
                         <img src="..\assets\P_TFG\Enscape_2024-11-14-15-57-21.png">
                         <figcaption>
@@ -76,13 +76,28 @@
                         <!-- Control del efecto de carga -->
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
-                                const images = document.querySelectorAll('.image-container img');
+                                    const images = document.querySelectorAll('.image-container img');
 
-                                images.forEach((img, index) => {
+                                   
+                                    const observer = new IntersectionObserver((entries) => {
+                                        entries.forEach(entry => {
+                                            if (entry.isIntersecting) {
+                                                const img = entry.target;
+                                                const index = Array.from(images).indexOf(img);
+
+                                             
+                                                img.style.animationDelay = `${index * 0.6}s`;
+                                                img.classList.add('visible');
+
+                                                
+                                                observer.unobserve(img);
+                                            }
+                                        });
+                                    }, { threshold: 0.2 }); 
+                                
                                     
-                                    img.style.animationDelay = `${index * 0.5}s`;
+                                    images.forEach(img => observer.observe(img));
                                 });
-                            });
                         </script>
                     
                 </div>

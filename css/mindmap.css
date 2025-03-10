@@ -9,9 +9,8 @@ svg { background: #050010;
 }
 .node { cursor: grab; fill: #e9f5ff; }
 
-.link {   
-          stroke-linecap: square; /* Extremos cuadrados */
-          /*shape-rendering: crispEdges; /* Líneas sin suavizado */ }
+.link {stroke-linecap: square; }
+
 
 h1{
     color:rgb(255, 255, 255);

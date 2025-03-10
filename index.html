@@ -57,7 +57,17 @@
         </div>
 
         <div id="mindmap"> 
-                 <svg></svg>
+                 <svg><defs>
+                    <filter id="soft-glow">
+                      <feGaussianBlur stdDeviation="2" result="glow"/>
+                      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2"/>
+                      <feMerge>
+                        <feMergeNode in="glow"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                </svg>
         </div>
 
         <div id="scroll-container">

@@ -217,11 +217,11 @@
                 sharedTags.forEach((tag, index) => {
                     let curvature;
                     if (index === 0) {
-                        curvature = 1000; 
+                        curvature = 0.0001; 
                     } else {
                         
                         const adjustedIndex = index - 0; 
-                        curvature =  (Math.ceil(adjustedIndex / 2)) * 9;
+                        curvature =  (Math.ceil(adjustedIndex / 2)) * 0.12;
                     }
                     links.push({
                         source: nodeA.id,
@@ -242,7 +242,7 @@
         const end = d.order === 0 ? { x: d.target.x, y: d.target.y } : { x: d.source.x, y: d.source.y };
         const dx = end.x - start.x;
         const dy = end.y - start.y;
-        const dr = Math.sqrt(dx * dx + dy * dy) * d.curvature; // Radio del arco
+        const dr = Math.sqrt(dx * dx + dy * dy) / d.curvature; // Radio del arco
 
         return `
               M${start.x},${start.y}
