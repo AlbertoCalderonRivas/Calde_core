@@ -262,8 +262,33 @@ class ShaderImageManager {
                             vec2 pixelUv = floor(vUv * uPixelSize) / uPixelSize;
                             vec4 color = texture2D(uTextura, pixelUv);
                             float gris = (color.r + color.g + color.b) / 3.0;
+                            float r = 0.0;
+                            float g = 0.0;
+                            float b = 0.0;
+
                             // Mezcla entre escala de grises y color basada en intensidad
-                            vec4 grisColor = vec4(vec3(gris), 1.0);
+                            if(gris < 0.3) {
+                                r = gris*0.2;
+                                g = 0.0;
+                                b = gris*0.4;
+                            }
+                            else if(gris < 0.6) {
+                                r = gris * 0.4;
+                                g = gris * 0.3;
+                                b = gris * 0.8;    
+                            
+                            }
+                            else if(gris < 0.9) {
+                            r = gris * 0.75;
+                            g = gris * 0.3;   
+                            b = gris * 0.8;
+                            }
+                            else if(gris <= 1.0) {
+                            r = 1.0;
+                            g = 1.0;
+                            b = 1.0;
+                            }
+                            vec4 grisColor = vec4(vec3(r,g,b), 1.0);
                             gl_FragColor = mix(color, grisColor, uIntensity);
                         }
                     `;
