@@ -16,7 +16,7 @@ body{
     bottom: 10px;
     border-style:solid;
     border:2px solid rgb(211, 154, 247);
-    padding: 10px;
+    padding: 0px;
     display: flex;
     
 
@@ -86,12 +86,12 @@ p{
     align-items: center;
     justify-content: center;
     padding: 3px;
-    border: solid 2px rgb(159, 119, 172);
+    border: solid 2px rgb(211, 154, 247);
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Centra horizontalmente */
-    justify-content: center; /* Centra verticalmente */
-    text-align: right; /* Centra el texto dentro del figcaption */
+    align-items: flex-end;
+    justify-content: center; 
+    text-align: right; 
 }
 #space{
     display:inline-block;
@@ -102,33 +102,28 @@ p{
 
     width: 100%;
     height: auto;
-    opacity: 0; /* Inicialmente transparentes */
-    filter: grayscale(80%) contrast(500%) blur(3px); /* Exageramos contraste y blur */
-    image-rendering: pixelated; /* Pixelado forzado */
-    transition: all 1s ease;
-    will-change: filter, opacity;
+    opacity: 100%; 
+  
     
 }
-img.visible {
-    animation: revealImage 3s ease forwards;
+
+canvas {display: block}
+
+.three-canvas {
+    position: relative;
+    width: 100%;
+    margin: 10px 0;
 }
 
+.three-canvas canvas {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
 
-
-
-@keyframes revealImage {
-    0% {
-        filter: grayscale(80%) contrast(500%) saturate(00%) blur(0px); /* Máximo pixelado */
-        opacity: 0.0;
-    }
-    100% {
-        filter: grayscale(0%) contrast(100%) saturate(110%) blur(0); /* Estado natural */
-        opacity: 1;
-    }
 }
 
 .image-container p {
-    border: solid 2px rgb(159, 119, 172);
+    
     color: grey;
     margin: 5px;
     margin-right: -10px;
@@ -168,17 +163,17 @@ img.visible {
     }
 }
 #tag-arq{
-    color:#ff56b6;
+    color:#db5991;
 }
 #tag-inm{
-    color:#47dba2;
+    color:#63d2a8;
 }
 #tag-ins{
-    color:#45B7D1;
+    color:#5ebcd2;
 }
 #tag-inv{
-    color:#7f4ed4;
+    color:#8e67d1;
 }
 #tag-par{
-    color:#fcd465;
+    color:#ddbc60;
 }

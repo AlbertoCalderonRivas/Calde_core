@@ -28,11 +28,11 @@
     createFilterButtons();
 
     const tagColors = {
-      "arq": "#ff56b6",  
-      "inm": "#47dba2",  
-      "ins": "#45B7D1",  
-      "inv": "#7f4ed4",  
-      "par": "#fcd465", 
+      "arq": "#db5991",  
+      "inm": "#63d2a8",  
+      "ins": "#5ebcd2",  
+      "inv": "#8e67d1",  
+      "par": "#ddbc60", 
     };
 
 

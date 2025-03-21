@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Tus metadatos y enlaces CSS actuales -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi web con múltiples shaders</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/noise.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/header.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Estilos para los contenedores de imágenes -->
+    <style>
+        .canvas-container {
+            width: 100%;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        .image-container {
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+            border: solid 2px rgb(211, 154, 247);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<section id="boxContent">
+    <div class="content">
+        <div class="content-data">
+            <div class="content-top">
+                <h2 id="Fecha"><small>[ 28 | 01| 2021 - 28 | 06 | 2021]</small></h2>
+            </div>
+            
+            <!-- Primera imagen con shader -->
+            <!-- Primera imagen con shader de escala de grises -->
+            <div class="image-container">
+                <div class="shader-image" style="width: 100%;" data-image="../assets/P_TFG/portada.png" data-shader="grayscale" ></div>
+                <figcaption>
+                    <p>Imagen en escala de grises</p>
+                </figcaption>
+
+            
+            <!-- Segunda imagen con shader de alto contraste -->
+
+                <div class="shader-image" style="width: 100%;" data-image="../assets/P_TFG/Captura de pantalla (250).png" data-shader="contrast" data-intensity="1.8"></div>
+                <figcaption>
+                    <p>Imagen con alto contraste</p>
+                </figcaption>
+      
+            
+            <!-- Tercera imagen con pixelado -->
+          
+                <div class="shader-image" 
+                style="width: 100%;" 
+                data-image="../assets/P_TFG/Captura de pantalla (269).png" 
+                data-shader="gs_pixelate" 
+                data-animate="true"
+                data-animate-pixel-size="true"
+                data-pixel-size-start="1" 
+                data-pixel-size-end="800"
+                data-animate-intensity="true"
+                data-intensity-start="1"
+                data-intensity-end="0"
+                data-duration="3.0">
+           </div>
+                <figcaption>
+                    <p>Imagen pixelada</p>
+                </figcaption>
+           
+            
+            <!-- Cuarta imagen con ruido -->
+
+                <div class="shader-image" style="width: 100%;" data-image="../assets/P_TFG/Captura de pantalla (284).png" data-shader="noise" data-intensity="0.8"></div>
+                <figcaption>
+                    <p>Imagen con ruido</p>
+                </figcaption>
+            </div>
+            
+        </div>
+        <div class="content-text">
+            <div class="content-top">
+                <h2 id="Titulo"><big>Cosmopolítica, Ciborgs y Tecnosentidos,</big> <br> Actualizar desde el ciberespacio</h2>
+            </div>
+            <p>Esta investigación se pregunta si la arquitectura...</p>
+        </div>
+    </div>
+</section>
+
+<!-- Cargar nuestro script de gestión de imágenes -->
+<script src="../js/shader-image-manager.js"></script>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/header.js" defer=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../js/shader-image-manager.js"></script>
+    
 
 </head>
 <body>
@@ -54,63 +57,120 @@
                             <span id="tag-par">[paramétrico]</span>
                         </p>
                     </div>
+                    <img src="..\assets\P_TFG\p_1.png">
+                    <img src="..\assets\P_TFG\p_2.png">
+                    <img src="..\assets\P_TFG\p_3.png">
+                    <img src="..\assets\P_TFG\p_4.png">
+                    <img src="..\assets\P_TFG\p_5.png">
                     <div class="image-container">
-                        <img src="..\assets\P_TFG\portada.png">
                         
-                            <span id="space"></span>>
-                        
-                        
-                        <img src="..\assets\P_TFG\Enscape_2024-11-14-15-57-21.png">
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_1.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="3.0">
+                        </div>
                         <figcaption>
-                            <p>Este es un pie de foto elegante y semántico.</p>
+                            <p>Selector de mundos .</p>
                         </figcaption>
 
-                        <img src="..\assets\P_TFG\Enscape_2024-11-14-15-57-21.png">
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_2.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="3.0">
+                        </div>
                         <figcaption>
-                            <p>Este es un pie de foto elegante y semántico.</p>
+                            <p>Mundo generado .</p>
                         </figcaption>
 
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_3.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="3.0">
+                        </div>
+                        <figcaption>
+                            <p>Torre de información .</p>
+                        </figcaption>
 
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_4.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="3.0">
+                        </div>
+                        <figcaption>
+                            <p>Interior cápsula .</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_5.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="3.0">
+                        </div>
+                        <figcaption>
+                            <p>Portada Cyberspace .</p>
+                        </figcaption>
                     </div>
-                    <img src="..\assets\P_TFG\Descarga cyberspace.png">
-                        <!-- Control del efecto de carga -->
-                        <script>
-                            document.addEventListener("DOMContentLoaded", () => {
-                                    const images = document.querySelectorAll('.image-container img');
 
-                                   
-                                    const observer = new IntersectionObserver((entries) => {
-                                        entries.forEach(entry => {
-                                            if (entry.isIntersecting) {
-                                                const img = entry.target;
-                                                const index = Array.from(images).indexOf(img);
+                    <iframe height="480" width="500" 
+                    src="https://www.youtube.com/embed/d12IycoOeXk&list=PLsP_LfnCrdIaAJog7A_xBu1M78pu5OxAX"> 
+              </iframe> 
 
-                                             
-                                                img.style.animationDelay = `${index * 0.6}s`;
-                                                img.classList.add('visible');
-
-                                                
-                                                observer.unobserve(img);
-                                            }
-                                        });
-                                    }, { threshold: 0.2 }); 
-                                
-                                    
-                                    images.forEach(img => observer.observe(img));
-                                });
-                        </script>
+                    
+                        
+                        
                     
                 </div>
                 <div class="content-text">
                     <div class="content-top">
                         <h2 id="Titulo"><big>Cosmopolítica, Ciborgs y Tecnosentidos,</big> <br> Actualizar desde el ciberespacio</h2>
                     </div>
-                    <p>Esta investigación se pregunta si la arquitectura puede encontrar características extrapolables del ciberespacio, que den realmente solución al inminente colapso social y tecnológico. 
-                    <br>El texto teórico se ejemplifica con una construcion rizomática virtual-interactiva realizada en Unity3D con proyectos de referencia para un futuro basado en los cuidados, la creación colectiva y la simbiosis techno-biológica.</p>
+                    <p>Esta investigación se pregunta si la arquitectura puede encontrar características extrapolables del ciberespacio, 
+                        que den realmente solución al inminente colapso social y tecnológico. 
+                    <br>El texto teórico se ejemplifica con una construcion rizomática virtual-interactiva realizada en Unity3D con
+                     proyectos de referencia para un futuro basado en los cuidados, la creación colectiva y la simbiosis techno-biológica.</p>
                     <p>.</p>
                     <p>.</p>
                     <p>.</p>
-                    <p>.</p>
+                    <p>La creación del mundo virtual se inicia en una sala generadora de mundos, donde </p>
                     <p>.</p>
                     <p>.</p>
                     <p>.</p>
