@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFG</title>
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+    <!--CSS-->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/noise.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!--JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/header.js" defer=""></script>
+    <script src="../js/popup.js" defer=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../js/shader-image-manager.js"></script>
+    
+
+</head>
+<body>
+    <main>
+
+        <div class="noise"></div>
+
+        <div class="header">
+            <div class="logo_container">
+             <h1><a href="../index.html">>calde_core </a></h1><h1>.TFG</h1>
+            </div>
+        
+        
+            <ul class="navigation" >
+                <a href=".work" style="padding: 0px 20px;"><li></li></a>
+                <a href=".Courses" style="padding: 0px 20px;"><li></li></a>
+                <a href=".Blog" style="padding: 0px 20px;"><li></li></a>
+                <a href=".aboutMe" style="padding: 0px 20px;"><li></li></a>
+            
+            </ul>
+        </div>
+
+        
+
+        <section id="boxContent">
+
+            <div class="content">
+                <div class="content-data">
+                    <div class="content-top">
+                        <h2 id="Fecha"><small>[ 28 | 01| 2021 - 28 | 06 | 2021]</small></h2>
+                        <p id="Localizacion">Madrid ETSAM - Ciberespacio</p>
+                        <p id="co-autoria">Tutor: <font color=grey>Eduardo Roig</font><br>
+                                           Edición editorial: <font color=grey>Daniel Méndez</font></p>
+                        <p id="Tags"><b>TAGS:</b></p>
+                        <p>
+                            <span id="tag-arq">[arquitectura]</span>
+                            <span id="tag-inm">[inmersiva]</span>
+                            <span id="tag-inv">[investigación]</span>
+                            <span id="tag-par">[paramétrico]</span>
+                        </p>
+                    </div>
+                    <img src="..\assets\P_TFG\p_1.png">
+                    <a href="https://drive.google.com/uc?id=12QKvM8UM95ssPmuWVgSRrRxBJt_TXiet&export=download" target="_blank"><img src="..\assets\P_TFG\p_2.png" ></a>
+                    <a href="https://drive.usercontent.google.com/download?id=1cXc58l5KLcg84-LCIZL1n7lMwhHMt7dy&export=download&authuser=0" target="_blank"><img src="..\assets\P_TFG\p_3.png"></a>
+                    <a href="https://github.com/AlbertoCalderonRivas/-Cyberspace-Alberto_Calderon_Rivas" target="_blank"><img src="..\assets\P_TFG\p_4.png"></a>
+                    <img src="..\assets\P_TFG\p_5.png">
+                    <div class="image-container">
+                        
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_1.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="4.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>Selector de mundos</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_2.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="1000"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="8.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>Mundo generado</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_3.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="6.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>Torre de información</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_4.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="4.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>Interior cápsula</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="../assets/P_TFG/tfg_5.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="6.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>Portada Cyberspace</p>
+                        </figcaption>
+                    </div>
+                    <div><p><br></p></div>
+                    <iframe height="440" width=100% 
+                    src="https://www.youtube.com/embed/5YOZIjhDe2g?si=DOc_arZm9cCkMCsS&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&iv_load_policy=3&disablekb=1" title="Cyberspace" frameborder="0" fs="0"> 
+                    </iframe> 
+                    <div><p><br></p></div>
+                    <iframe height="440" width=100% 
+                    src="https://www.youtube.com/embed/d12IycoOeXk?si=rLWebeiBKZtup4Tp&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&iv_load_policy=3&disablekb=1" title="Cyberspace" frameborder="0" fs="0"> 
+                    </iframe> 
+
+                    
+                        
+                    
+                </div>
+                <div class="content-text">
+                    <div class="content-top">
+                        <h2 id="Titulo"><big>Cosmopolítica, Ciborgs y Tecnosentidos,</big> <br> Actualizar desde el ciberespacio</h2>
+                    </div>
+                    <p>:Abstract:</p>
+                    <p>Esta investigación se pregunta si la arquitectura puede encontrar características extrapolables del ciberespacio, 
+                        que den realmente solución al inminente colapso social y tecnológico. 
+                    <br>El texto teórico se ejemplifica con una construcion rizomática virtual-interactiva realizada en Unity3D con
+                     proyectos de referencia para un futuro basado en los cuidados, la creación colectiva y la simbiosis techno-biológica.</p>
+                    <p>.</p>
+
+                    <p>:Objetivos:</p>
+                    <p>La investigación aborda este impetuoso y unidireccional paradigma
+                        tecnológico con preocupación sobre la aparente inexistencia de alternativas
+                        y con una pregunta omnipresente “¿Qué puede aportar la
+                        arquitectura en una realidad que tiende a la virtualización?” <br><br>
+                        Si Marcos Novak defendía:<br>
+                        <font color = grey size = "2">La comprensión de las criaturas finitas en un universo infi nito está necesariamente limitada;
+                        en consecuencia, en cualquier época y bajo cualquier perspectiva fi losófi ca, científi ca,
+                        artística, religiosa o ideológica, siempre hay un «borde del pensamiento», un límite entre
+                        lo conocido y el abismo. Algunos viven dentro de ese límite, otros lo deambulan. Algunos
+                        lo cruzan e intentan construir y habitar el abismo. Saliendo del mundo conocido, construyendo
+                        más allá del borde del pensamiento, amplían el mundo para todos. A estos los llamo
+                        arquitectos, aunque también pueden ser poetas de todo tipo: científi cos, fi lósofos, ingenieros,
+                        bailarines, directores, escritores, actores o músicos. <br><i>(Novak, 1994)</i></font><br><br>
+                        Parece lógico pensar que la arquitectura está llamada a expandir el
+                        imaginario de posibles. En el pensamiento de Novak, reconocemos
+                        este problema como perteneciente al “World C” el mundo electrónico,
+                        telemático y digital <i>(Novak, 1994, pág. 2)</i>.<br> Para encontrar una
+                        respuesta, de haberla, esta aparecerá en las arquitecturas del ciberespacio.
+                        La motivación de esta investigación se fundamenta en la tesis a demostrar:<br><br>
+                        <font color = 	#D39AF7><i>¿Encontrará la arquitectura características extrapolables al ciberespacio,
+                        que den solución a este inminente colapso tecnológico?</i></font> </p>
+                    <p>.</p>
+
+                    <p>:Metodología:</p>
+                    <p> <small>El bloque teórico comienza con la exposición de la disyuntiva colapso/actualización. 
+                        Se contextualiza el marco socio-teórico donde
+                        surge la dimensión virtual en relación con la material; Se analiza la
+                        tendencia direccional de la creciente demanda digital y se presenta
+                        la respuesta imperante en Silicon Valley como el determinismo ante
+                        el cual responder. A continuación, se estudia y valora qué reflexiones
+                        o intentos de actualización se han generado desde diferentes
+                        campos de conocimiento (Sociología, filosofía, política, física…) y
+                        cómo estos han sabido apropiarse de las características inherentes a
+                        la revolución digital para revisar sus principios.
+                        Sirviendo de ejemplo, se valora su modulación a la teoría arquitectónica.</small><br><br>
+
+                        Esta tarea se desarrolla en <b>tres secciones</b> de escala decreciente:<br><br>
+                        <font color = magenta><b>Sistema</b></font>, como escala planetaria, trata los modelos de
+                        esquemas relacionales a nivel socio-político;<br><br>
+                         <font color = yellow><b>Nodos</b></font>, como escala
+                        persona, trata la creación del yo y de la identidad colectiva; <br><br>
+                        <font color = #00FF00><b>Topología</b></font>,
+                        como la escala interna mental, trata los procesos de percepción
+                        del espacio y de método proyectual arquitectónico.<br><br>
+                        Para ello la investigación parte de la colección de ensayos “Fragmentar
+                        el Futuro” de Yuk Hui para abordar los modelos de red en
+                        la escala de Sistema; el “Manifiesto Ciborg” de Donna Haraway y
+                        el “Manifiesto Xenofeminista” del colectivo Laboria Cuboniks para
+                        definir los avatares y la construcción de la identidad colectiva en la
+                        escala Nodos; y “Digital Culture in Architecture” de Antoine Picon
+                        para analizar los procesos de percepción y creación del espacio digital
+                        en relación con el físico.
+                    
+                     </p>
+                    <p>.</p>
+                    <p>:Cyberspace:</p>
+                    <p> <font color = grey size = "2">“-¿De qué tamaño quieres ser? -le preguntó.
+                        -¡Oh, me da lo mismo! – se apresuró a contestar Alicia-. Lo que me desagrada es esto de
+                        cambiar cada dos por tres, ¿sabe usted?
+                        -Yo no lo sé -volvió a decir el Gusano de Seda” <i>(Carroll, 1865)</i></font><br><br>
+
+                        La resistencia al cambio se diluye en los ritmos frenéticos que marca
+                        la generación ‘spiz’. Alicia necesitó una experiencia alucinógena
+                        para superar una pubertad que la obligaba a despedirse de la comodidad
+                        de lo familiar.<br>
+                        La sociedad experimenta un proceso similar de transformación en
+                        una época en que las (r)evoluciones tecnológicas exponenciales
+                        amenazan constantemente con la obsolescencia. Se ve arrastrada
+                        por la corriente de bits, abatida por la fuerza del progreso; con la
+                        dirección impuesta pese a no reconocer el sentido.<br><br>
+
+                        El uso de esta aplicación, y otras similares como Unreal Engine o
+                Mozilla Hubs, está introduciéndose en la arquitectura por su potencial
+                de control sobre el espacio. Herramientas de diseño como AutoCAD
+                o Rhinoceros; y plugins como Grasshopper (que introducen
+                la posibilidad del diseño paramétrico en base a datos a tiempo real)
+                centran su objetivo exclusivamente en el diseño en la “etapa de proyecto”.<br>
+                Unity permite que estos modelos evolucionen después de la
+                fecha de publicación en base a las reglas marcadas por el código.<br><br>
+                La experimentación en Unity ha posibilitado aplicar conceptos vistos
+                en esta investigación como el hackeo del proyecto, la construcción
+                de los espacios desde las identidades, la organización rizomática
+                de las referencias y la visualización de la misma a través de un
+                intermediario digital que expande la información mediante códigos
+                QR, interfaces y la encarnación de un cuerpo virtual.<br><br>
+                El resultado es una aplicación ejecutable desde un PC que aumenta
+                las posibilidades de representación de estos ejemplos frente a una
+                organización clásica de catálogo, no solo en el plano estético, si no
+                también en el volumen de información y en la experiencia de lectura
+                de la misma.<br>
+                El Atlas Mnemosyne buscaba la inspiración de soluciones creativas
+                mediante la exposición caótica de la información, con la intención
+                de evitar la lectura desde una sola entrada y en un orden concreto.
+                En Cyberspace se fuerza esta lectura generando una organización
+                exclusiva para cada interacción. 
+                    </p>
+                    <p>.</p>
+
+
+                </div>
+            
+                
+            </div>
+        </section>
+        <div id="imagePopup" class="image-popup-overlay">
+            <div class="image-popup-content">
+                <button class="image-popup-close">&times;</button>
+                <img id="popupImage" src="" alt="Popup Image">
+            </div>
+        </div>
+
+
+    </main>
+</body>
+</html>

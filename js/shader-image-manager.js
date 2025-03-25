@@ -30,6 +30,25 @@ class ShaderImageManager {
         }, 300); // Pequeño retraso para asegurar que todo está renderizado
     }
     
+    easeFunctions = {
+        // Ease In - comienza lento y acelera
+        easeInQuad: (t) => t * t,
+        easeInCubic: (t) => t * t * t,
+        easeInQuart: (t) => t * t * t * t,
+
+        // Ease Out - comienza rápido y desacelera
+        easeOutQuad: (t) => t * (2 - t),
+        easeOutCubic: (t) => (--t) * t * t + 1,
+        easeOutQuart: (t) => 1 - (--t) * t * t * t,
+
+        // Ease In-Out - comienza lento, acelera en el medio, y desacelera al final
+        easeInOutQuad: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+        easeInOutCubic: (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+        
+        // Función lineal por defecto (sin ease)
+        linear: (t) => t
+    };
+
     // NUEVO: Método para comprobar elementos ya visibles al cargar
     checkInitialVisibility() {
         console.log("Comprobando elementos inicialmente visibles...");
@@ -96,6 +115,11 @@ class ShaderImageManager {
             console.error('Contenedor sin atributo data-image:', container);
             return;
         }
+
+        const easeConfig = {
+            easeFunction: container.getAttribute('data-ease-function') || 'linear',
+            // Añadir más configuraciones personalizadas si es necesario
+        };
         
         // Crear escena y cámara
         const scene = new THREE.Scene();
@@ -259,7 +283,10 @@ class ShaderImageManager {
                         uniform float uIntensity;
                         varying vec2 vUv;
                         void main() {
-                            vec2 pixelUv = floor(vUv * uPixelSize) / uPixelSize;
+                            float pixelSize = floor(max(1.0, uPixelSize));
+                            vec2 centeredUv = vUv - 0.5;
+                            vec2 pixelUv = floor(centeredUv * pixelSize) / pixelSize;
+                            pixelUv += 0.5;
                             vec4 color = texture2D(uTextura, pixelUv);
                             float gris = (color.r + color.g + color.b) / 3.0;
                             float r = 0.0;
@@ -267,21 +294,21 @@ class ShaderImageManager {
                             float b = 0.0;
 
                             // Mezcla entre escala de grises y color basada en intensidad
-                            if(gris < 0.3) {
-                                r = gris*0.2;
+                            if(gris < 0.6) {
+                                r = gris*0.1;
                                 g = 0.0;
-                                b = gris*0.4;
+                                b = gris*0.1;
                             }
-                            else if(gris < 0.6) {
-                                r = gris * 0.4;
+                            else if(gris < 0.75) {
+                                r = gris * 0.5;
                                 g = gris * 0.3;
-                                b = gris * 0.8;    
+                                b = gris * 0.9;    
                             
                             }
                             else if(gris < 0.9) {
-                            r = gris * 0.75;
-                            g = gris * 0.3;   
-                            b = gris * 0.8;
+                            r = gris * 0.65;
+                            g = gris * 0.4;   
+                            b = gris * 0.7;
                             }
                             else if(gris <= 1.0) {
                             r = 1.0;
@@ -340,7 +367,8 @@ class ShaderImageManager {
                 enabled: shaderConfig.animate,
                 properties: [],
                 startTime: null,
-                duration: shaderConfig.duration
+                duration: shaderConfig.duration,
+                easeFunction: this.easeFunctions[easeConfig.easeFunction] || this.easeFunctions.linear
             };
             
             // Añadir propiedades a animar
@@ -368,7 +396,7 @@ class ShaderImageManager {
     }
     
     startAnimation(index) {
-        console.log(`Iniciando animación para imagen ${index}`);
+        //console.log(`Iniciando animación para imagen ${index}`);
         const animation = this.animations[index];
         
         if (animation.enabled && animation.properties.length > 0) {
@@ -386,7 +414,10 @@ class ShaderImageManager {
             
             if (elapsedTime < animation.duration) {
                 // Calcular el progreso de la animación (0 a 1)
-                const progress = elapsedTime / animation.duration;
+                let progress = elapsedTime / animation.duration;
+                
+                // Aplicar la función de ease
+                progress = animation.easeFunction(progress);
                 
                 // Actualizar todas las propiedades en animación
                 animation.properties.forEach(prop => {

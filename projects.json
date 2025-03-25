@@ -1,7 +1,7 @@
 {
     "nodes" : [
-        {"id":"01","name":"TFG","tags":["arq","inm","inv","par"],"link":"proyectos/TFG.html"},
-        {"id":"02","name":"Guía del Estudiante","tags":["inm"],"link":"proyectos/TFG.html"},
+        {"id":"01","name":"TFG","tags":["arq","inm","inv","par"],"link":"proyectos/01_TFG.html"},
+        {"id":"02","name":"Guía del Estudiante","tags":["inm"],"link":"proyectos/02_Guia.html"},
         {"id":"03","name":"TFM: Basurero digital","tags":["inm","ins","inv","par"],"link":"proyectos/TFG.html"},
         {"id":"05","name":"PIP","tags":["inm","par"],"link":"proyectos/TFG.html"},
         {"id":"06","name":"Artificial LAN","tags":["arq","ins","inv","par"],"link":"proyectos/TFG.html"},
