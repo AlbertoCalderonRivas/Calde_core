@@ -9,6 +9,7 @@ body{
 #boxContent{
     
     background: #050010;
+    overflow: hidden;
     position: absolute;
     top: 45px; 
     left: 5px;
@@ -32,7 +33,7 @@ body{
     gap: 30px;
 }
 .content-top{
-    height: 18vh;
+    min-height: 18vh;
 }
 
 .content-data{
@@ -108,6 +109,15 @@ p{
     opacity: 100%; 
   
     
+}
+
+#logo {
+    width: 140px;
+    height: auto;
+    margin-left:90px;
+    margin-top: -30px;
+    opacity: 56%;
+    filter: grayscale(100%);
 }
 
 canvas {display: block}
