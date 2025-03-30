@@ -64,8 +64,8 @@
                   node.x = NODE_R_BOUND;
                   node.vx = 0;
               }
-              if (node.x + 6*NODE_R_BOUND > width ) {
-                  node.x = width-6*NODE_R_BOUND;
+              if (node.x + 7*NODE_R_BOUND > width ) {
+                  node.x = width-7*NODE_R_BOUND;
                   node.vx = 0;
               }
             
@@ -74,8 +74,8 @@
                   node.y = 2*NODE_R_BOUND;
                   node.vy = 0; 
               }
-              if (node.y + 8*NODE_R_BOUND > height) {
-                  node.y = height - 8*NODE_R_BOUND;
+              if (node.y + 14*NODE_R_BOUND > height) {
+                  node.y = height - 14*NODE_R_BOUND;
                   node.vy = 0; 
               }
          });
