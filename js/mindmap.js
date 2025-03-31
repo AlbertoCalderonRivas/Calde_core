@@ -7,6 +7,8 @@
     const NODE_R_ZOOM_MOBILE = 8;
     const NODE_FORCE = -180;
     const NODE_FORCE_MOBILE = -30;
+    const BOUNDSMUL_BASE = 8;
+    const BOUNDSMUL_MOBILE = 16;
     
     const LINK_BASE_OPACITY = 0.1;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
@@ -55,7 +57,7 @@
     function fixBounds() {
               
         const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
-
+        const BOUNDMUL = isMobile ? BOUNDSMUL_MOBILE : BOUNDSMUL_BASE;
           const graphNodes = simulation.nodes();
 
           graphNodes.forEach((node) => {
@@ -74,8 +76,8 @@
                   node.y = 2*NODE_R_BOUND;
                   node.vy = 0; 
               }
-              if (node.y + 14*NODE_R_BOUND > height) {
-                  node.y = height - 14*NODE_R_BOUND;
+              if (node.y + BOUNDMUL*NODE_R_BOUND > height) {
+                  node.y = height - BOUNDMUL*NODE_R_BOUND;
                   node.vy = 0; 
               }
          });
