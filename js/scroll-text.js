@@ -3,9 +3,9 @@
 // Seleccionar el contenedor
 const scrollText = document.getElementById("scroll-text");
 document.addEventListener("filteredNodesUpdated", cargarProyectos);
-async function cargarProyectos() {
-    
 
+
+async function cargarProyectos() {
 try {
 
     let visitCount;
@@ -38,7 +38,7 @@ try {
     }
     
     // 🔹 Texto que se desplazará
-    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── VISITAS TOTALES [${contadorData.value}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
+    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── VISITAS TOTALES [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
     
 
     scrollText.innerText = texto.repeat(10);
