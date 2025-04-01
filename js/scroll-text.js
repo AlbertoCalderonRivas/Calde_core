@@ -23,7 +23,7 @@ try {
             console.error("Error al obtener contador:", error);
             // Si falla, usar valor de respaldo
             visitCount = Math.floor((Date.now() / 86400000) - 19722); // Simulación
-        }
+        } 
     }
 
     const response = await fetch("../projects.json"); // Ruta al archivo JSON
