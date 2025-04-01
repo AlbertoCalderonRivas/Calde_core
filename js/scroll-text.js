@@ -17,7 +17,7 @@ try {
         localStorage.setItem('visitCount', (visitCount + 1).toString());
     } else {
     
-        const contadorResponse = await fetch('../api/contador');
+        const contadorResponse = await fetch('/api/contador');
         const contadorData = await contadorResponse.json();
         visitCount = contadorData.value || '?';
     }
