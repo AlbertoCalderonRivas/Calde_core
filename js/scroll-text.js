@@ -8,8 +8,19 @@ async function cargarProyectos() {
 
 try {
 
-    const contadorResponse = await fetch('https://api.countapi.xyz/hit/calde-core/visits');
-    const contadorData = await contadorResponse.json();
+    let visitCount;
+        
+    // Detectar si estamos en desarrollo local o en producción
+    if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+       
+        visitCount = parseInt(localStorage.getItem('visitCount') || '0');
+        localStorage.setItem('visitCount', (visitCount + 1).toString());
+    } else {
+    
+        const contadorResponse = await fetch('../api/contador');
+        const contadorData = await contadorResponse.json();
+        visitCount = contadorData.value || '?';
+    }
 
     const response = await fetch("../projects.json"); // Ruta al archivo JSON
     const data = await response.json();
