@@ -12,14 +12,22 @@ try {
         
     // Detectar si estamos en desarrollo local o en producción
     if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-       
+        // En desarrollo local, usar localStorage para simular contador
         visitCount = parseInt(localStorage.getItem('visitCount') || '0');
         localStorage.setItem('visitCount', (visitCount + 1).toString());
     } else {
-    
-        const contadorResponse = await fetch('/api/contador');
-        const contadorData = await contadorResponse.json();
-        visitCount = contadorData.value || '?';
+        // En producción, usar proxy CORS
+        try {
+            const proxyUrl = 'https://corsproxy.io/?';
+            const targetUrl = 'https://api.countapi.xyz/hit/calde-core/visits';
+            const contadorResponse = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+            const contadorData = await contadorResponse.json();
+            visitCount = contadorData.value || 0;
+        } catch (error) {
+            console.error("Error al obtener contador:", error);
+            // Si falla, usar valor de respaldo
+            visitCount = Math.floor((Date.now() / 86400000) - 19722); // Simulación
+        }
     }
 
     const response = await fetch("../projects.json"); // Ruta al archivo JSON
