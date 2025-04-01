@@ -4,7 +4,7 @@
         {"id":"02","name":"Guía del Estudiante","tags":["inm"],"link":"proyectos/02_Guia.html"},
         {"id":"03","name":"TFM: Basurero digital","tags":["inm","ins","inv","par"],"link":"proyectos/03_TFM_bv.html"},
         {"id":"05","name":"PIP","tags":["inm","par"],"link":"proyectos/TFG.html"},
-        {"id":"06","name":"Artificial LAN","tags":["arq","ins","inv","par"],"link":"proyectos/TFG.html"},
+        {"id":"06","name":"Artificial LAN","tags":["arq","inv","par"],"link":"proyectos/06_ArtificialLAN.html"},
         {"id":"07","name":"UltraIcon","tags":["arq"],"link":"proyectos/TFG.html"},
         {"id":"08","name":"Kink-y","tags":["arq"],"link":"proyectos/TFG.html"},
         {"id":"09","name":"Hammam","tags":["arq","par"],"link":"proyectos/TFG.html"},

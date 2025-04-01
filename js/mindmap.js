@@ -16,7 +16,7 @@
     let svg, simulation,width, height, isMobile;
 
     const tags = ["arq", "inm", "ins", "inv", "par"];
-    let activeTags = new Set(); //lista de tags activos 
+    window.activeTags = new Set(); //lista de tags activos 
     window.selectedNodes = new Set();
    
 
