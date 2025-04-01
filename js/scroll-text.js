@@ -7,6 +7,10 @@ async function cargarProyectos() {
     
 
 try {
+
+    const contadorResponse = await fetch('https://api.countapi.xyz/hit/calde-core/visits');
+    const contadorData = await contadorResponse.json();
+
     const response = await fetch("../projects.json"); // Ruta al archivo JSON
     const data = await response.json();
     const totalProyectos = data.nodes.length;
@@ -23,7 +27,7 @@ try {
     }
     
     // 🔹 Texto que se desplazará
-    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
+    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── VISITAS TOTALES [${contadorData.value}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
     
 
     scrollText.innerText = texto.repeat(10);
