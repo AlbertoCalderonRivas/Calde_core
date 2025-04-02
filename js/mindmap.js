@@ -8,7 +8,7 @@
     const NODE_FORCE = -180;
     const NODE_FORCE_MOBILE = -30;
     const BOUNDSMUL_BASE = 8;
-    const BOUNDSMUL_MOBILE = 16;
+    const BOUNDSMUL_MOBILE = 17;
     
     const LINK_BASE_OPACITY = 0.1;
     const LINK_HIGHLIGHT_OPACITY = 0.9;

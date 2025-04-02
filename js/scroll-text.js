@@ -42,7 +42,7 @@ try {
     }
     
     // 🔹 Texto que se desplazará
-    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── VISITAS TOTALES [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
+    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── CONTADOR DE VISITAS [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
     
     scrollText.innerText = texto.repeat(10);
     scrollText.innerText += scrollText.innerText;
