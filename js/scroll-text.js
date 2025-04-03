@@ -5,7 +5,7 @@ document.addEventListener("filteredNodesUpdated", cargarProyectos);
 async function cargarProyectos() {
 try {
     let visitCount;
-    
+    let texto = `Loading...`
     // Detectar si estamos en desarrollo local o en producción
     const isLocalhost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
         
@@ -42,7 +42,7 @@ try {
     }
     
     // 🔹 Texto que se desplazará
-    const texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── CONTADOR DE VISITAS [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
+    texto = `⋆౨ৎ˚⟡˖ CREADO x ࣪ALBERTO CALDERÓN RIVAS - PORTFOLIO WEB ──୨ৎ── CONTADOR DE VISITAS [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
     
     scrollText.innerText = texto.repeat(10);
     scrollText.innerText += scrollText.innerText;
