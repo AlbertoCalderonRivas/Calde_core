@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to open the popup
     function openImagePopup(imgElement) {
         // Set the src of the popup image to the clicked image's src
-        popupImage.src = imgElement.src || imgElement.getAttribute('data-image');
+        const highResSource = imgElement.getAttribute('data-highres-image');
+        
+        popupImage.src = highResSource || imgElement.src || imgElement.getAttribute('data-image');
         
         // Ensure the popup is responsive
         popupImage.style.maxWidth = '90vw';
@@ -29,12 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation();
             
             // Get the actual image source
+            const highResSource = imgElement.getAttribute('data-highres-image');
+            //if there is no highResSource, get the data-image attribute
             const src = imgElement.tagName === 'DIV' 
                 ? imgElement.getAttribute('data-image') 
                 : imgElement.src;
             
             // Set popup image source
-            popupImage.src = src;
+            popupImage.src =highResSource || src;
             
             // Show popup
             popup.classList.add('show');
