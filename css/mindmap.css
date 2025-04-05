@@ -66,11 +66,112 @@ h1{
     border-radius: 2px;
     font-family: 'Pixeled', monospace;
     font-size: 12px;
+    width: 48px;
+    height: 38px;
 }
-
+.filter-btn:hover {
+    background: rgba(174, 0, 255, 0.2);
+}
 .filter-btn.active {
     background: #4ECDC4;
     color: #000;
     border-color: #4ECDC4;
+}
+
+#info-btn {
+    padding: 6px 12px;
+    border: 1px solid #ae00ff;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 2px;
+    font-family: 'Pixeled', monospace;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+}
+#info-btn:hover {
+    background: rgba(174, 0, 255, 0.2);
+}
+
+
+/* Estilos para el popup */
+.info-popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top:0;
+    left: 0;
+   background: rgba(0, 0, 0, 0.0);
+    width: 5%;
+    height: 100%;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    
+}
+
+.info-popup-content {
+    font-family: "Consolas", monospace;
+    font-size: 15px;
+    position: absolute;
+    background: rgba(20, 20, 25, 0.7);
+    bottom:90px;
+    left: 20px;
+    padding: 20px;
+    width: 277px;
+    
+    border: 1px solid #ae00ff;
+    border-radius: 2px;
+    color: rgb(255, 255, 255);
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    0% {  transform: scaleX(100%) scaleY(0%); transform-origin: bottom left;}
+    100% {   transform: scaleX(100%) scaleY(100%); transform-origin: bottom left;}
+}
+
+
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-popup:hover {
+    color: white;
+}
+
+.tags-legend, .instructions {
+    margin-bottom: 20px;
+}
+
+
+.info-popup h4 {
+    margin: 10px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+}
+
+.info-popup ul {
+    padding-left: 20px;
+    margin: 5px 0;
+}
+
+.info-popup li {
+    margin: 5px 0;
+    color: rgb(255, 255, 255);
 }
 

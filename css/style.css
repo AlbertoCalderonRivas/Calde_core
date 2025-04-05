@@ -31,8 +31,25 @@ body {
     font-size: 17px;
     
     animation: scroll-left 300s linear infinite;
-
+ @media (max-width: 768px) {
+        font-size: 16px;
+    } 
 }
+
+#emptyNodesText{
+    position: absolute;
+    align-items: center;
+    justify-self: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    user-select: none;
+    font-family: "Pixeled";
+    color:rgb(105, 0, 65);
+    font-size: 10px;
+}
+
 
 @keyframes scroll-left {
     from {

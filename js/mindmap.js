@@ -1,6 +1,6 @@
 
    
-    
+    const enText = document.getElementById("emptyNodesText");
     const NODE_R_BASE = 4; // Tamaño base
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
     const NODE_R_BASE_MOBILE = 6;
@@ -19,6 +19,39 @@
     window.activeTags = new Set(); //lista de tags activos 
     window.selectedNodes = new Set();
    
+    //Popup de info de los nodos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configurar el popup de información
+        const infoBtn = document.getElementById('info-btn');
+        const infoPopup = document.getElementById('info-popup');
+        const closePopup = document.querySelector('.close-popup');
+    
+        if (infoBtn && infoPopup) {
+            // Abrir popup al hacer clic en el botón de información
+            infoBtn.addEventListener('click', function() {
+                infoPopup.style.display = 'block';
+                
+            });
+    
+            // Cerrar popup al hacer clic en X
+            closePopup.addEventListener('click', function() {
+                infoPopup.style.display = 'none';
+            });
+    
+            // Cerrar popup al hacer clic fuera del contenido
+            window.addEventListener('click', function(event) {
+                if (event.target === infoPopup) {
+                    infoPopup.style.display = 'none';
+                }
+            });
+    
+            // Prevenir que clics dentro del contenido cierren el popup
+            const popupContent = document.querySelector('.info-popup-content');
+            popupContent.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        }
+    });
 
     fetch('projects.json') //contiene un array con todos los proyectos
     .then(response => response.json())
@@ -36,6 +69,7 @@
       "inv": "#8e67d1",  
       "par": "#ddbc60", 
     };
+
 
 
     //funciones config de simulación
@@ -133,14 +167,16 @@
         window.filteredNodes = activeTags.size === 0
           ? nodes.slice()
           : nodes.filter(node =>
-              Array.from(activeTags).some(tag => node.tags.includes(tag))
+              Array.from(activeTags).every(tag => node.tags.includes(tag))
             );
-
+        
+            enText.innerText = ``;
         // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
         if (filteredNodes.length === 0) {
           console.warn("No hay nodos que cumplan los filtros activos:", Array.from(activeTags));
           // Opcional: puedes optar por mostrar todos los nodos en lugar de ninguno
-          filteredNodes = nodes.slice();
+          //filteredNodes = nodes.slice();
+          enText.innerText = `No fitting criteria`;
         }
 
         document.dispatchEvent(new Event("filteredNodesUpdated"));

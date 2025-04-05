@@ -27,7 +27,7 @@ class ShaderImageManager {
         // NUEVO: Comprobación inicial para elementos ya visibles en viewport
         setTimeout(() => {
             this.checkInitialVisibility();
-        }, 300); // Pequeño retraso para asegurar que todo está renderizado
+        }, 1000); // Pequeño retraso para asegurar que todo está renderizado
     }
     
     easeFunctions = {
@@ -497,5 +497,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Pequeña espera para asegurar que los estilos estén aplicados
     setTimeout(() => {
         const imageManager = new ShaderImageManager('.shader-image');
-    }, 100);
+    }, 300);
 });

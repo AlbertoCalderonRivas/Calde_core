@@ -41,9 +41,9 @@ async function cargarProyectos() {
     else{
         textoTag = ``;
     }
-    
+    const ultimaActualizacion = await lastUpdate();
     // 🔹 Texto que se desplazará
-    const texto = `⋆౨ৎ˚⟡˖ DISEÑO Y PROGRAMACIÓN WEB x ࣪ALBERTO CALDERÓN RIVAS ──୨ৎ── CONTADOR DE VISITAS [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [01/04/2025] ✶⋆.˚ `;
+    const texto = `⋆౨ৎ˚⟡˖ DISEÑO Y PROGRAMACIÓN WEB x ࣪ALBERTO CALDERÓN RIVAS ──୨ৎ── CONTADOR DE VISITAS [${visitCount}] ──୨ৎ── NÚMERO DE PROYECTOS EN MEMORIA [${totalProyectos}] ──9ৎ── NÚMERO DE PROYECTOS MOSTRADOS [${proyectosMostrados}]` + textoTag + ` ──9ৎ── ÚLTIMA ACTUALIZACIÓN [${ultimaActualizacion}] ✶⋆.˚ `;
     
     scrollText.innerText = texto.repeat(10);
     scrollText.innerText += scrollText.innerText;
@@ -52,6 +52,29 @@ async function cargarProyectos() {
     console.error("Error cargando proyectos:", error);
     scrollText.innerText = "Error cargando estadísticas...";
 }
+}
+
+async function lastUpdate() {
+    try {
+        const response = await fetch('https://api.github.com/repos/AlbertoCalderonRivas/Calde_core/commits');
+        const data = await response.json();
+        const fecha = new Date(data[0].commit.author.date);
+
+        // Formatear la fecha
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        const horas = String(fecha.getHours()).padStart(2, '0');
+        const minutos = String(fecha.getMinutes()).padStart(2, '0');
+        const segundos = String(fecha.getSeconds()).padStart(2, '0');
+
+        // Formato personalizado: xx-xx-xx ~ hh:hh:hh
+        const ultimaFecha = `${dia}-${mes}-${anio} ~ ${horas}:${minutos}:${segundos}`;
+        return ultimaFecha;
+    } catch (error) {
+        console.error("Error al obtener la última fecha de commit:", error);
+        return "Desconocida";
+    }
 }
 
 cargarProyectos();
