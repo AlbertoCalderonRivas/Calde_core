@@ -31,7 +31,7 @@ async function cargarProyectos() {
     const data = await response.json();
     const totalProyectos = data.nodes.length;
     
-    const proyectosMostrados = window.filteredNodes ? window.filteredNodes.length : 28;
+    const proyectosMostrados = window.filteredNodes ? window.filteredNodes.length : totalProyectos;
     let textoTag = ``;
    
     if(window.activeTags && window.activeTags.size > 0){
