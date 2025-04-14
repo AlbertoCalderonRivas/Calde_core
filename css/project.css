@@ -246,3 +246,20 @@ iframe{
     border: none;
     outline: none;
 }
+
+a{
+   
+    user-select: none;
+}
+
+a:link{
+    color: #FFFF11;
+}
+
+a:active{
+    color: #FF4411;
+
+}
+a:visited{
+    color: #FF11BB;
+}
