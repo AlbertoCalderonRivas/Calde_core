@@ -15,7 +15,6 @@ body{
     left: 5px;
     right: 5px;
     bottom: 10px;
-    border-style:solid;
     border:2px solid rgb(211, 154, 247);
     padding-left: 3px;
     padding-right: 3px;
@@ -140,9 +139,15 @@ canvas {display: block}
     color: grey;
     margin: 3px;
     margin-right: 0px;
-
     font-size: small;
 
+}
+
+.figcaption p{
+    color: grey;
+    margin: 3px;
+    margin-right: 0px;
+    font-size: small;
 }
 
 iframe{
@@ -263,3 +268,45 @@ a:active{
 a:visited{
     color: #FF11BB;
 }
+
+/* estilos para el loader */
+
+.section-loader {
+    position: fixed;
+    top: 45px; 
+    left: 5px;
+    right: 5px;
+    bottom: 10px;
+    border:2px solid rgb(211, 154, 247);
+
+    background-color: #050010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+
+    opacity: 1;
+    transition: opacity 3.5s ease;
+}
+.section-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-text{
+    font-family: 'Consolas', monospace;
+    position: relative;
+    font-size: 20px;
+    color: rgb(151, 128, 172);
+    text-align: left;
+    user-select: none;
+}
+
+.ltext{
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    white-space: pre;
+}
+

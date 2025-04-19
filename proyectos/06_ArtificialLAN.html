@@ -6,12 +6,13 @@
     <title>𐙚‧₊˚⋆calde_core⋆˚₊‧𐙚</title>
     <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
     <!--CSS-->
+    <link rel="stylesheet" href="../css/project.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/noise.css">
-    <link rel="stylesheet" href="../css/project.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!--JS-->
+    <script src="../js/loader.js" defer=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/header.js" defer=""></script>
@@ -44,6 +45,11 @@
         
 
         <section id="boxContent">
+            <div id="loader" class="section-loader">
+                <div class="loader-text">
+                    <div id="ascii-loader" class="ltext"></div>
+                </div>
+            </div>
 
             <div class="content">
                 <div class="content-data">
@@ -208,22 +214,22 @@
     
                     <div><p><br></p></div>
                     <img src="..\assets\P_aLAN\p_8.jpg">
-                    <figcaption>
+                    <figcaption class="figcaption">
                         <p>prototipo piel técnica: proj + spark + soft + uv + infinity mirror</p>
                     </figcaption>
                     <div><p><br></p></div>
                     <img src="..\assets\P_aLAN\p_9.jpg">
-                    <figcaption>
+                    <figcaption class="figcaption">
                         <p>prototipo piel técnica: soft + uv + fluor</p>
                     </figcaption>
                     <div><p><br></p></div>
                     <img src="..\assets\P_aLAN\p_10.jpg">
-                    <figcaption>
+                    <figcaption class="figcaption">
                         <p>prototipo piel técnica: proj + fluornet + hard + infinity mirror + fluor</p>
                     </figcaption>
                     <div><p><br></p></div>
                     <img src="..\assets\P_aLAN\p_11.jpg">
-                    <figcaption>
+                    <figcaption class="figcaption">
                         <p>prototipo piel técnica: fluornet + iridiscent + uv + sound</p>
                     </figcaption>
                     <div><p><br></p></div>
@@ -259,13 +265,13 @@
             
                 
             </div>
-        </section>
-        <div id="imagePopup" class="image-popup-overlay">
-            <div class="image-popup-content">
-                <button class="image-popup-close">&times;</button>
-                <img id="popupImage" src="" alt="Popup Image">
+            <div id="imagePopup" class="image-popup-overlay">
+                <div class="image-popup-content">
+                    <button class="image-popup-close">&times;</button>
+                    <img id="popupImage" src="" alt="Popup Image">
+                </div>
             </div>
-        </div>
+        </section>
 
 
     </main>
