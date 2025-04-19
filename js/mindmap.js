@@ -25,34 +25,54 @@
         const infoBtn = document.getElementById('info-btn');
         const infoPopup = document.getElementById('info-popup');
         const closePopup = document.querySelector('.close-popup');
+        const popupContent = document.querySelector('.info-popup-content');
     
         if (infoBtn && infoPopup) {
-            // Abrir popup al hacer clic en el botón de información
-            infoBtn.addEventListener('click', function() {
-                infoPopup.style.display = 'block';
+            // Función para cerrar el popup con animación
+            function hidePopup() {
+                popupContent.classList.add('closing');
                 
+                // Quitar la clase active al botón inmediatamente
+                infoBtn.classList.remove('active');
+                
+                // Esperar a que termine la animación antes de ocultar realmente
+                popupContent.addEventListener('animationend', function handleAnimationEnd() {
+                    infoPopup.style.display = 'none';
+                    popupContent.classList.remove('closing');
+                    // Eliminar el evento para evitar múltiples listeners
+                    popupContent.removeEventListener('animationend', handleAnimationEnd);
+                }, { once: true }); // El {once: true} hace que se elimine automáticamente después del primer disparo
+            }
+            
+            // Función para mostrar el popup
+            function showPopup() {
+                // Asegurarse de que no tenga la clase 'closing'
+                popupContent.classList.remove('closing');
+                
+                infoPopup.style.display = 'block';
+                infoBtn.classList.add('active');
+            }
+            
+            // Toggle del popup al hacer clic en el botón de información
+            infoBtn.addEventListener('click', function() {
+                if (infoPopup.style.display === 'block' && !popupContent.classList.contains('closing')) {
+                    hidePopup();
+                } else {
+                    showPopup();
+                }
             });
     
             // Cerrar popup al hacer clic en X
             closePopup.addEventListener('click', function() {
-                infoPopup.style.display = 'none';
-            });
-    
-            // Cerrar popup al hacer clic fuera del contenido
-            window.addEventListener('click', function(event) {
-                if (event.target === infoPopup) {
-                    infoPopup.style.display = 'none';
-                }
+                hidePopup();
             });
     
             // Prevenir que clics dentro del contenido cierren el popup
-            const popupContent = document.querySelector('.info-popup-content');
             popupContent.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
         }
     });
-
     fetch('projects.json') //contiene un array con todos los proyectos
     .then(response => response.json())
     .then(data => {
@@ -88,33 +108,54 @@
         simulation.alpha(1).restart();
     }
     
+
     function fixBounds() {
               
         const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
         const BOUNDMUL = isMobile ? BOUNDSMUL_MOBILE : BOUNDSMUL_BASE;
-          const graphNodes = simulation.nodes();
-
-          graphNodes.forEach((node) => {
-              // Limitar posición X
-              if (node.x - NODE_R_BOUND < 0) {
-                  node.x = NODE_R_BOUND;
-                  node.vx = 0;
-              }
-              if (node.x + 7*NODE_R_BOUND > width ) {
-                  node.x = width-7*NODE_R_BOUND;
-                  node.vx = 0;
-              }
-            
-              // Limitar posición Y
-              if (node.y - 2*NODE_R_BOUND < 0) {
-                  node.y = 2*NODE_R_BOUND;
-                  node.vy = 0; 
-              }
-              if (node.y + BOUNDMUL*NODE_R_BOUND > height) {
-                  node.y = height - BOUNDMUL*NODE_R_BOUND;
-                  node.vy = 0; 
-              }
-         });
+        const graphNodes = simulation.nodes();
+        
+        const filtersElement = document.getElementById('filters');
+        const filtersRect = filtersElement.getBoundingClientRect();
+         
+        // Calcular el límite inferior (margen superior desde el borde superior de los botones)
+        const bottomMargin = 39; // margen adicional en píxeles
+   const lowerBoundY = filtersRect.top - bottomMargin;
+    
+    // Límites horizontales del contenedor (si quieres que respete el ancho real de los botones)
+    const leftBoundX = filtersRect.left - 10; // 10px de margen extra
+    const rightBoundX = filtersRect.right - 2;
+    
+    graphNodes.forEach((node) => {
+        // Limitar posición X general (límites de la pantalla)
+        if (node.x - NODE_R_BOUND < 0) {
+            node.x = NODE_R_BOUND;
+            node.vx = 0;
+        }
+        if (node.x + 7*NODE_R_BOUND > width) {
+            node.x = width - 7*NODE_R_BOUND;
+            node.vx = 0;
+        }
+      
+        // Limitar posición Y general
+        if (node.y - 2*NODE_R_BOUND < 0) {
+            node.y = 2*NODE_R_BOUND;
+            node.vy = 0; 
+        }
+        
+        // Comprobar si el nodo está sobre el área de los botones
+        if (node.y + NODE_R_BOUND > lowerBoundY && 
+            node.x >= leftBoundX && 
+            node.x <= rightBoundX) {
+            // Si está sobre los botones, empujarlo hacia arriba
+            node.y = lowerBoundY - NODE_R_BOUND;
+            node.vy = 0;
+        }
+        else if (node.y + BOUNDMUL*NODE_R_BOUND > height) {
+            node.y = height - BOUNDMUL*NODE_R_BOUND;
+            node.vy = 0; 
+        }
+        });
     }
   
     function updateResponsiveProperties() {
@@ -444,6 +485,7 @@
         window.addEventListener("resize", () => {
                     initSVG();
                     updateResponsiveProperties();
+                    fixBounds();
                     restartSimulation();
         });
 

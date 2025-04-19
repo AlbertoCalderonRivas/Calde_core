@@ -94,8 +94,17 @@ h1{
     width: 38px;
     height: 38px;
 }
+#info-btn.active {
+    background: #4ECDC4;
+    color: #000;
+    border-color: #4ECDC4;
+}
+
 #info-btn:hover {
     background: rgba(174, 0, 255, 0.2);
+}
+#info-btn.active:hover{
+    background: #4ECDC4;
 }
 
 
@@ -107,7 +116,8 @@ h1{
     top:0;
     left: 0;
    background: rgba(0, 0, 0, 0.0);
-    width: 5%;
+   
+    width: 0%;
     height: 100%;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -137,6 +147,14 @@ h1{
     100% {   transform: scaleX(100%) scaleY(100%); transform-origin: bottom left;}
 }
 
+@keyframes fadeOut {
+    0% { transform: scaleX(100%) scaleY(100%); transform-origin: bottom left;}
+    100% { transform: scaleX(100%) scaleY(0%); transform-origin: bottom left;}
+}
+
+.info-popup-content.closing {
+    animation: fadeOut 0.8s ease forwards;
+}
 
 
 .close-popup {
