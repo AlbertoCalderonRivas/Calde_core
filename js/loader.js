@@ -7,7 +7,7 @@ fetch("../assets/General/loadingScreen.txt")
       .filter(f => f.length > 0);
 
     let currentFrame = 0;
-    const frameDelay = 200; // Puedes ajustar la velocidad
+    const frameDelay = 200; 
     const loaderElement = document.getElementById("ascii-loader");
 
     function updateFrame() {
@@ -15,16 +15,26 @@ fetch("../assets/General/loadingScreen.txt")
       currentFrame = (currentFrame + 1) % frames.length;
     }
 
-    updateFrame(); // Mostrar el primer frame
+    updateFrame(); 
     const intervalId = setInterval(updateFrame, frameDelay);
+    
+    // Limitar el tiempo máximo de espera para el loader
+    const maxTimeout = 5000; 
+    const maxTimeoutId = setTimeout(() => {
+      hideLoader();
+    }, maxTimeout);
+
+    // Función para ocultar el loader
+    function hideLoader() {
+      clearInterval(intervalId); 
+      const loader = document.getElementById("loader");
+      loader.classList.add("hidden");
+      setTimeout(() => loader.remove(), 3500);     }
 
     // Ocultar el loader cuando todo haya cargado
     window.addEventListener("load", () => {
-        setTimeout(() => {
-          const loader = document.getElementById("loader");
-          loader.classList.add("hidden");
-          setTimeout(() => loader.remove(), 3500); // lo quita del DOM después del fade
-        }, 500);
+      clearTimeout(maxTimeoutId); 
+      setTimeout(hideLoader, 500);
       });
   })
   .catch(err => {
