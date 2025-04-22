@@ -1,6 +1,6 @@
 body{
     overflow: hidden;
-    font-family: Consolas, "Segoe UI Symbol", "Arial Unicode MS","Noto Sans Egyptian Hieroglyphs", sans-serif;
+ 
 }
 ::-webkit-scrollbar {
     display: none;
@@ -295,7 +295,7 @@ a:visited{
 }
 
 .loader-text{
-    font-family: 'Consolas',"Segoe UI Symbol", "Arial Unicode MS","Noto Sans Egyptian Hieroglyphs", sans-serif, monospace;
+    font-family:  'Noto Sans Mono',  monospace;
     position: relative;
     font-size: 20px;
     color: rgb(151, 128, 172);

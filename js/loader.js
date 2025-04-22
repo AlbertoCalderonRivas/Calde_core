@@ -19,7 +19,7 @@ fetch("../assets/General/loadingScreen.txt")
     const intervalId = setInterval(updateFrame, frameDelay);
     
     // Limitar el tiempo máximo de espera para el loader
-    const maxTimeout = 50000; 
+    const maxTimeout = 5000; 
     const maxTimeoutId = setTimeout(() => {
       hideLoader();
     }, maxTimeout);
