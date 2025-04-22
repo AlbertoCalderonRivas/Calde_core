@@ -302,6 +302,11 @@ a:visited{
     text-align: left;
     user-select: none;
 }
+@media (max-width: 768px) {
+    .loader-text{
+        font-size: 15px;
+    }
+}
 
 .ltext{
     position: absolute; 
