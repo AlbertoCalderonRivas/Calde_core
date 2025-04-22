@@ -1,5 +1,6 @@
 body{
     overflow: hidden;
+    font-family: Consolas, "Segoe UI Symbol", "Arial Unicode MS","Noto Sans Egyptian Hieroglyphs", sans-serif;
 }
 ::-webkit-scrollbar {
     display: none;
