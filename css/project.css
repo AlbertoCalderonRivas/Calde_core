@@ -295,7 +295,7 @@ a:visited{
 }
 
 .loader-text{
-    font-family: 'Consolas', monospace;
+    font-family: 'Consolas',"Segoe UI Symbol", "Arial Unicode MS","Noto Sans Egyptian Hieroglyphs", sans-serif, monospace;
     position: relative;
     font-size: 20px;
     color: rgb(151, 128, 172);
