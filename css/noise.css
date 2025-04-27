@@ -2,7 +2,7 @@
 	content: "";
 	background-image: url(https://contra.com/freelance-industry-report-2021/images/background-noise.png?0140508b3ca119631050c945a1c2987c);
     animation: noise 1.2s steps(3) infinite both;
-    opacity: 1;
+    opacity: 0.8;
     height: 1000%;
 	transform-origin: center center;
     width: 100%;

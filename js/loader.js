@@ -1,4 +1,4 @@
-fetch("../assets/General/loadingScreen.txt")
+fetch("/assets/General/loadingScreen.txt")
   .then(res => res.text())
   .then(text => {
     const frames = text
