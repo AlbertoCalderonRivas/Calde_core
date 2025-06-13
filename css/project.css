@@ -85,6 +85,17 @@ p{
     margin: 0.6em;
     margin-top:-0.20em;
 }
+
+pre{
+    
+    font-family: 'Consolas',monospace;
+    color: white;
+    user-select: none;
+    
+    overflow-x: auto; 
+    white-space: pre-wrap; 
+    word-break: break-all; 
+}
 .image-container{
     align-items: center;
     justify-content: center;

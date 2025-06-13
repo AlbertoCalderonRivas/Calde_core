@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𐙚‧₊˚⋆calde_core⋆˚₊‧𐙚</title>
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+    <!--CSS-->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/noise.css">
+    <link rel="stylesheet" href="/css/project.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!--JS-->
+    <script src="/js/loader.js" defer=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/js/header.js" defer=""></script>
+    <script src="/js/popup.js" defer=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/js/shader-image-manager.js"></script>
+    
+
+</head>
+<body>
+    <main>
+
+        <div class="noise"></div>
+
+        <div class="header">
+            <div class="logo_container">
+             <h1><a href="/index.html">>calde_core</a></h1><h1>/KrA.Atom</h1>
+            </div>
+        
+        
+            <ul class="navigation" ></ul>
+        </div>
+
+        
+
+        <section id="boxContent">
+            <div id="loader" class="section-loader">
+                <div class="loader-text">
+                    <div id="ascii-loader" class="ltext"></div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="content-data">
+                    <div class="content-top">
+                        <h2 id="Fecha"><small>[ 28 | 02 | 2016 - 29 | 07 | 2016]</small></h2>
+                        <p id="Localizacion">Madrid - Estación Principe Pío</p>
+                        
+                       
+
+                        <p id="Tags"><b>TAGS:</b></p>
+                        <p>
+                            <span id="tag-arq">[arquitectura]</span>
+                  
+
+                        </p>
+                    </div>
+                   
+                    
+                    
+                    <div class="image-container">
+                        
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="/assets/P_KrA/p_3.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="4.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>axonometría</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="\assets\P_KrA\p_2.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="1000"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="8.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>planta</p>
+                        </figcaption>
+
+                        <div class="shader-image" 
+                        style="width: 100%;" 
+                        data-image="\assets\P_KrA\p_1.png" 
+                        data-shader="gs_pixelate" 
+                        data-animate="true"
+                        data-animate-pixel-size="true"
+                        data-pixel-size-start="1" 
+                        data-pixel-size-end="800"
+                        data-animate-intensity="true"
+                        data-intensity-start="1"
+                        data-intensity-end="0"
+                        data-duration="6.0"
+                        data-ease-function="easeInOutQuad">
+                        </div>
+                        <figcaption>
+                            <p>seccion</p>
+                        </figcaption>
+
+    
+                    </div>
+
+                    
+                        
+                    
+                </div>
+                <div class="content-text">
+                    <div class="content-top">
+                        <h2 id="Titulo"><big>KrA.Atom</big>  </h2>
+                    </div>
+                    <p>:Abstract:</p>
+                    <p> Un proyecto mixto de huerto urbano y centro de rehabilitación. Ocupa la antigua estación de Príncipe Pío con invernaderos de kratom, hortalizas y vegetales como terapia ocupacional para personas en riesgo de adicción, inspirado en una conversación con antiguos okupantes de este espacio. </p>
+                    <p>.</p>
+
+                    
+
+                </div>
+            
+                
+            </div>
+        </section>
+        <div id="imagePopup" class="image-popup-overlay">
+            <div class="image-popup-content">
+                <button class="image-popup-close">&times;</button>
+                <img id="popupImage" src="" alt="Popup Image">
+            </div>
+        </div>
+
+
+    </main>
+</body>
+</html>

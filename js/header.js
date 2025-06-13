@@ -3,6 +3,25 @@ const menu = document.querySelector(".navigation")
 const menuLinks = document.querySelectorAll(".navigation a");
 const menuItems = document.querySelectorAll(".navigation li");
 
+const navigationItems = [
+    { href: "/proyectos/WIP", label: "Works", short: "W" },
+    { href: "/proyectos/WIP", label: "Courses", short: "C" },
+    { href: "/proyectos/WIP", label: "Blog", short: "B" },
+    { href: "/navigation/AboutMe", label: "About Me", short: "A" }
+];
+
+function renderNavigation() {
+    menu.innerHTML = ""; // Limpia el contenido actual
+    navigationItems.forEach(item => {
+        const a = document.createElement("a");
+        a.href = item.href;
+        a.style.padding = "0px 5px";
+        const li = document.createElement("li");
+        li.textContent = item.label; // Por defecto, el nombre largo
+        a.appendChild(li);
+        menu.appendChild(a);
+    });
+}
 function adjustLogoFontSize() {
     // Ajusta tamaño de la fuente del header en función del tamaño de la pantalla
     const windowWidth = window.innerWidth;
@@ -15,13 +34,9 @@ function adjustLogoFontSize() {
         logo.style.marginTop = '0.8em';
         menu.style.fontSize = '0.8em';
         menu.style.marginTop = '0.8em'
-        menuLinks.forEach(link => {
-            link.style.padding = '0px 5px';})
-        
-            menuItems[0].textContent = 'W';
-            menuItems[1].textContent = 'C';
-            menuItems[2].textContent = 'B';
-            menuItems[3].textContent = 'A';
+        menu.querySelectorAll("li").forEach((li, i) => {
+            li.textContent = navigationItems[i].short;
+        });
         
     } else {
         // Pantallas grandes
@@ -29,17 +44,12 @@ function adjustLogoFontSize() {
         logo.style.marginTop = '0.4em';
                 menu.style.marginTop = '0.5em'
         menu.style.fontSize = '1em';
-        menuLinks.forEach(link => {
-            link.style.padding = '0px 8px';})
-
-
-        menuItems[0].textContent = 'Works';
-        menuItems[1].textContent = 'Courses';
-        menuItems[2].textContent = 'Blog';
-        menuItems[3].textContent = 'About Me';
+        menu.querySelectorAll("li").forEach((li, i) => {
+            li.textContent = navigationItems[i].label;
+        });
         
     }
 }
-
+renderNavigation();
 adjustLogoFontSize();
 window.addEventListener('resize', adjustLogoFontSize);

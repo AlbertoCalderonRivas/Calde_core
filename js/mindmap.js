@@ -14,8 +14,11 @@
     const LINK_HIGHLIGHT_OPACITY = 0.9;
     const LINK_FORCE_MULTIPLICATOR = 0.004;
     let svg, simulation,width, height, isMobile;
+  
 
-    const tags = ["arq", "inm", "ins", "inv", "par"];
+
+
+    const tags = ["arq", "inm", "ins", "inv", "par", "group"];
     window.activeTags = new Set(); //lista de tags activos 
     window.selectedNodes = new Set();
    
@@ -73,14 +76,29 @@
             });
         }
     });
+
+
+    
     fetch('projects.json') //contiene un array con todos los proyectos
     .then(response => response.json())
     .then(data => {
-    const nodes = data.nodes;
-    
+        // Inicializa todos los nodos como visibles
+        data.nodes.forEach(n => n.visible = true);
+        
+        // Oculta los nodos que tienen la propiedad "parent"
+        data.nodes.forEach(n => {
+            if (n.parent !== undefined) {
+                n.visible = false;
+            }
+        });
+        
+    const allNodes = data.nodes;
+    const nodes = allNodes.filter(n => n.visible !== false);
+     
     const links = generateLinks(nodes); //esto hay que cambiarlo ------------
 
     createFilterButtons();
+     
 
     const tagColors = {
       "arq": "#db5991",  
@@ -88,7 +106,18 @@
       "ins": "#5ebcd2",  
       "inv": "#8e67d1",  
       "par": "#ddbc60", 
+      "group": "#FFFFFF"
     };
+
+        const tagOpacity = {
+      "arq": LINK_BASE_OPACITY,  
+      "inm": LINK_BASE_OPACITY,  
+      "ins": LINK_BASE_OPACITY,  
+      "inv": LINK_BASE_OPACITY,  
+      "par": LINK_BASE_OPACITY, 
+      "group": 1
+    };
+
 
 
 
@@ -101,6 +130,7 @@
         height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
         if(simulation){simulation.force("center", d3.forceCenter(width / 2, height / 2));}
+       
     }
     
     function restartSimulation() {
@@ -118,11 +148,11 @@
         const filtersElement = document.getElementById('filters');
         const filtersRect = filtersElement.getBoundingClientRect();
          
-        // Calcular el límite inferior (margen superior desde el borde superior de los botones)
+        // Calcular el límite inferior botones
         const bottomMargin = 39; // margen adicional en píxeles
    const lowerBoundY = filtersRect.top - bottomMargin;
     
-    // Límites horizontales del contenedor (si quieres que respete el ancho real de los botones)
+    // Límites horizontales del contenedor de botones
     const leftBoundX = filtersRect.left - 10; // 10px de margen extra
     const rightBoundX = filtersRect.right - 2;
     
@@ -179,9 +209,10 @@
     function createFilterButtons() {
     activeTags.clear();
     const container = d3.select(".filter-container");
+    const preferedTags = tags.filter(tag => tag !== "group"); // Excluir "group" de los botones
     
     container.selectAll(".filter-btn")
-        .data(tags)
+        .data(preferedTags)
         .join("button")
         .attr("class", "filter-btn")
         .text(d => d.toUpperCase())
@@ -203,11 +234,12 @@
 
         simulation.stop();
 
+        const visibles = allNodes.filter(n => n.visible !== false);
 
         // Si no hay filtros activos, se muestran todos los nodos
         window.filteredNodes = activeTags.size === 0
-          ? nodes.slice()
-          : nodes.filter(node =>
+          ? visibles.slice()
+          : visibles.filter(node =>
               Array.from(activeTags).every(tag => node.tags.includes(tag))
             );
         
@@ -223,13 +255,7 @@
         document.dispatchEvent(new Event("filteredNodesUpdated"));
         const newLinks = generateLinks(filteredNodes);
 
-        //Reiniciar posiciones de los nodos
-        filteredNodes.forEach(node => {
-        node.x = width / 2;  // Centrar nodos
-        node.y = height / 2;
-        delete node.vx;     // Eliminar velocidad anterior
-        delete node.vy;
-        });
+        
 
         // Actualizar simulación
         simulation.nodes(filteredNodes);
@@ -243,7 +269,7 @@
                     .attr("stroke-width", 1)
                     .attr("fill", "none")
                     .attr("stroke", d => tagColors[d.tag])
-                    .attr("stroke-opacity", LINK_BASE_OPACITY),
+                    .attr("stroke-opacity", d => tagOpacity[d.tag]),
                 update => update,
                 exit => exit.remove()
             );
@@ -282,40 +308,55 @@
     
     //funciones para links
     
-    function generateLinks(nodes) {
-        // Función mágica para generar links
-        const links = [];
-        const nodeMap = new Map(nodes.map(n => [n.id, n]));
-        
-        for (let i = 0; i < nodes.length; i++) {
-            for (let j = i + 1; j < nodes.length; j++) {
-                const nodeA = nodes[i];
-                const nodeB = nodes[j];
-                const sharedTags = nodeA.tags.filter(tag => nodeB.tags.includes(tag));
-                
-                sharedTags.forEach((tag, index) => {
-                    let curvature;
-                    if (index === 0) {
-                        curvature = 0.0001; 
-                    } else {
-                        
-                        const adjustedIndex = index - 0; 
-                        curvature =  (Math.ceil(adjustedIndex / 2)) * 0.12;
-                    }
-                    links.push({
-                        source: nodeA.id,
-                        target: nodeB.id,
-                        weight: sharedTags.length/2,
-                        tag: tag,
-                        curvature: curvature,
-                        order: index % 2
-                    });
+function generateLinks(nodes) {
+    const links = [];
+    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+
+    // 1. Enlaces entre nodos que NO tienen parent (nodos normales)
+    for (let i = 0; i < nodes.length; i++) {
+        const nodeA = nodes[i];
+        if (nodeA.parent) continue; 
+
+        for (let j = i + 1; j < nodes.length; j++) {
+            const nodeB = nodes[j];
+            if (nodeB.parent) continue; 
+
+            const sharedTags = nodeA.tags.filter(tag => nodeB.tags.includes(tag));
+            sharedTags.forEach((tag, index) => {
+                let curvature = index === 0 ? 0.0001 : (Math.ceil((index - 0) / 2)) * 0.12;
+                let baseWeight = sharedTags.length / 2;
+               
+                links.push({
+                    source: nodeA.id,
+                    target: nodeB.id,
+                    weight: baseWeight,
+                    tag: tag,
+                    curvature: curvature,
+                    order: index % 2
                 });
-            }
+            });
         }
-        return links;
     }
-    
+
+    // 2. Enlaces de hijos a su padre
+    nodes.forEach(node => {
+        if (node.parent && nodeMap.has(node.parent)) {
+            console.log("Enlace hijo a padre:", node.id, "->", node.parent);
+            links.push({
+                source: node.parent,
+                target: node.id,
+                weight: 90,
+                tag: "group", 
+                curvature: 0.0001,
+                order: 0
+            });
+        }
+    });
+    console.log("Links generados:", links.filter(l => l.tag === "group"));
+    return links;
+}
+
+
     function arcPath(d) {
         const start = d.order === 0 ? { x: d.source.x, y: d.source.y } : { x: d.target.x, y: d.target.y };
         const end = d.order === 0 ? { x: d.target.x, y: d.target.y } : { x: d.source.x, y: d.source.y };
@@ -342,7 +383,7 @@
     link.transition()
         .duration(800)
         .attr("stroke-opacity", l => 
-            (l.source.id === d.id || l.target.id === d.id) ? LINK_HIGHLIGHT_OPACITY : LINK_BASE_OPACITY
+            (l.source.id === d.id || l.target.id === d.id) ? LINK_HIGHLIGHT_OPACITY : tagOpacity[l.tag]
         );
     }
 
@@ -356,7 +397,7 @@
             .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE); // Tamaño móvil/desktop
         link.transition()
             .duration(800)
-            .attr("stroke-opacity", LINK_BASE_OPACITY);
+            .attr("stroke-opacity", d => tagOpacity[d.tag]);
     }
 
     function drag(simulation) {
@@ -372,7 +413,7 @@
             d.startY = event.y;
 
 
-            event.sourceEvent.preventDefault(); //esto evita scroll en moviles, quiza haya que quitarlo
+            event.sourceEvent.preventDefault(); 
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
@@ -404,12 +445,36 @@
             handleNodeUnhover(event, d);
             }
            
-         if (!d.dragged && d.link) {
-            console.log("Nodo clickeado:", d, "Redirigiendo a:", d.link);
-         window.location.href = d.link;
+         if (!d.dragged) {
+            console.log(d.id, d.isGroup);
+
+            if (d.isGroup) {
+                 console.log("Nodo clickeado:", d, "Expandiendo/colapsando hijos");
+                  toggleChildren(d.id);
+                } else {
+                    if(d.link){
+                        console.log("Nodo clickeado:", d, "Redirigiendo a:", d.link);
+                        window.location.href = d.link;
+                        
+                    } else {
+                        console.log("Nodo clickeado:", d, "No tiene enlace asociado");
+                    }
+            }
          }
 
         });
+        }
+
+        function toggleChildren(groupId) {
+         allNodes.forEach(n => {
+         if (n.parent === groupId) {
+              n.visible = !n.visible;
+            }
+            });
+
+            
+
+            updateNodes();
         }
 
 
@@ -479,8 +544,6 @@
 
         });
 
-
-
         //initSVG();
         window.addEventListener("resize", () => {
                     initSVG();
@@ -493,7 +556,6 @@
         if (event.target.tagName === "svg") {
             link.transition().attr("stroke-opacity", LINK_BASE_OPACITY);
         }
-    });
+});
 
-        
-      })
+    })

@@ -29,9 +29,9 @@ async function cargarProyectos() {
 
     const response = await fetch("../projects.json"); // Ruta al archivo JSON
     const data = await response.json();
-    const totalProyectos = data.nodes.length;
+    const totalProyectos = data.nodes.filter(n => !n.parent).length;
     
-    const proyectosMostrados = window.filteredNodes ? window.filteredNodes.length : totalProyectos;
+    const proyectosMostrados = window.filteredNodes ? window.filteredNodes.filter(n => !n.parent).length : totalProyectos;
     let textoTag = ``;
    
     if(window.activeTags && window.activeTags.size > 0){

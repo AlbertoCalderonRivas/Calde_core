@@ -61,7 +61,7 @@
 
     display: flex;
     list-style: none;
-    padding: 0;
+    padding: 0 ;
     
     font-size: 1.3em;
     right: 3dvw; 
@@ -75,6 +75,7 @@
     height: 100%;
     display: table;
     transition: padding 1.2s ease;
+    
     
 }
 
