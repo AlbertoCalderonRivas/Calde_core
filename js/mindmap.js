@@ -3,8 +3,8 @@
     const enText = document.getElementById("emptyNodesText");
     const NODE_R_BASE = 4; // Tamaño base
     const NODE_R_ZOOM = 10; // Tamaño al hacer hover
-    const NODE_R_BASE_MOBILE = 6;
-    const NODE_R_ZOOM_MOBILE = 8;
+    const NODE_R_BASE_MOBILE = 5;
+    const NODE_R_ZOOM_MOBILE = 7;
     const NODE_FORCE = -180;
     const NODE_FORCE_MOBILE = -30;
     const BOUNDSMUL_BASE = 8;
