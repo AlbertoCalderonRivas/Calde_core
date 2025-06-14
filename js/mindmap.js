@@ -13,8 +13,11 @@
     const LINK_BASE_OPACITY = 0.1;
     const LINK_HIGHLIGHT_OPACITY = 0.9;
     const LINK_FORCE_MULTIPLICATOR = 0.004;
+
+    const LINK_WIDTH = 1;
+    const LINK_GROUP_WIDTH = 2;
+
     let svg, simulation,width, height, isMobile;
-  
 
 
 
@@ -106,7 +109,7 @@
       "ins": "#5ebcd2",  
       "inv": "#8e67d1",  
       "par": "#ddbc60", 
-      "group": "#FFFFFF"
+      "group": "#CCCCCC"
     };
 
         const tagOpacity = {
@@ -281,7 +284,7 @@
         .join(
             enter => enter.append("path")
                 .attr("class", "link")
-                .attr("stroke-width", 1)
+                .attr("stroke-width", d => d.tag === "group" ? LINK_GROUP_WIDTH : LINK_WIDTH)
                 .attr("fill", "none")
                 .attr("stroke", d => tagColors[d.tag])
                 .attr("stroke-opacity", d => tagOpacity[d.tag]),
@@ -554,7 +557,7 @@ function generateLinks(nodes) {
             .data(links)
             .join("path")
             .attr("class", "link")
-            .attr("stroke-width", 1)
+            .attr("stroke-width", d => d.tag === "group" ? LINK_GROUP_WIDTH : LINK_WIDTH)
             .attr("stroke-opacity",LINK_BASE_OPACITY)
             .attr("fill", "none")
             .attr("stroke", d => tagColors[d.tag]);
