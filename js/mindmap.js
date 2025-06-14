@@ -231,80 +231,92 @@
     }
 
     function updateNodes() {
+    simulation.stop();
 
-        simulation.stop();
-
-        const visibles = allNodes.filter(n => n.visible !== false);
-
-        // Si no hay filtros activos, se muestran todos los nodos
-        window.filteredNodes = activeTags.size === 0
-          ? visibles.slice()
-          : visibles.filter(node =>
-              Array.from(activeTags).every(tag => node.tags.includes(tag))
-            );
+    const visibles = allNodes.filter(n => n.visible !== false);
+    
+    // Si no hay filtros activos, se muestran todos los nodos
+    if (activeTags.size === 0) {
+        window.filteredNodes = visibles.slice();
+    } else {
+        // Filtrar nodos que cumplen con los tags activos
+        const tagFilteredNodes = visibles.filter(node =>
+            Array.from(activeTags).every(tag => node.tags.includes(tag))
+        );
         
-            enText.innerText = ``;
-        // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
-        if (filteredNodes.length === 0) {
-          console.warn("No hay nodos que cumplan los filtros activos:", Array.from(activeTags));
-          // Opcional: puedes optar por mostrar todos los nodos en lugar de ninguno
-          //filteredNodes = nodes.slice();
-          enText.innerText = `No fitting criteria`;
-        }
-
-        document.dispatchEvent(new Event("filteredNodesUpdated"));
-        const newLinks = generateLinks(filteredNodes);
-
+        // Crear un Set para evitar duplicados
+        const finalNodes = new Set(tagFilteredNodes);
         
+        // Agregar nodos hijos visibles cuyos padres estén en los nodos filtrados
+        tagFilteredNodes.forEach(node => {
+            if (node.isGroup) {
+                // Buscar hijos de este nodo grupo
+                const children = visibles.filter(child => child.parent === node.id);
+                children.forEach(child => {
+                    finalNodes.add(child);
+                });
+            }
+        });
+        
+        window.filteredNodes = Array.from(finalNodes);
+    }
+    
+    enText.innerText = ``;
+    // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
+    if (filteredNodes.length === 0) {
+        console.warn("No hay nodos que cumplan los filtros activos:", Array.from(activeTags));
+        enText.innerText = `No fitting criteria`;
+    }
 
-        // Actualizar simulación
-        simulation.nodes(filteredNodes);
-        simulation.force("link").links(newLinks);
+    document.dispatchEvent(new Event("filteredNodesUpdated"));
+    const newLinks = generateLinks(filteredNodes);
 
-        // Actualizar enlaces
-        link = link.data(newLinks, d => `${d.source.id}-${d.target.id}-${d.tag}-${d.curvature}`)
-            .join(
-                enter => enter.append("path")
-                    .attr("class", "link")
-                    .attr("stroke-width", 1)
-                    .attr("fill", "none")
-                    .attr("stroke", d => tagColors[d.tag])
-                    .attr("stroke-opacity", d => tagOpacity[d.tag]),
-                update => update,
-                exit => exit.remove()
-            );
+    // Actualizar simulación
+    simulation.nodes(filteredNodes);
+    simulation.force("link").links(newLinks);
+    simulation.force("childRepulsion", childRepulsionForce());
 
-
-        // Actualizar nodos
-        node = node.data(filteredNodes, d => d.id)
-            .join(
-                enter => enter.append("circle")
-                    .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
-                    .attr("class", "node")
-                    .call(drag(simulation))
-                    .on("mouseover touchstart", handleNodeHover)
-                    .on("mouseout touchend", handleNodeUnhover),
-                update => update,
-                exit => exit.remove()
-            );
-
-        // Actualizar etiquetas
-        labels = labels.data(filteredNodes, d => d.id)
+    // Actualizar enlaces
+    link = link.data(newLinks, d => `${d.source.id}-${d.target.id}-${d.tag}-${d.curvature}`)
         .join(
-            enter => enter.append("text")
-                .attr("class", "node-id")
-                .text(d => `[${d.id}]`)
-                .attr("text-anchor", "left")
-                .attr("dy", "-0.5em")
-                .attr("dx", "0.5em"),
+            enter => enter.append("path")
+                .attr("class", "link")
+                .attr("stroke-width", 1)
+                .attr("fill", "none")
+                .attr("stroke", d => tagColors[d.tag])
+                .attr("stroke-opacity", d => tagOpacity[d.tag]),
             update => update,
             exit => exit.remove()
         );
 
+    // Actualizar nodos
+    node = node.data(filteredNodes, d => d.id)
+        .join(
+            enter => enter.append("circle")
+                .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
+                .attr("class", "node")
+                .call(drag(simulation))
+                .on("mouseover touchstart", handleNodeHover)
+                .on("mouseout touchend", handleNodeUnhover),
+            update => update,
+            exit => exit.remove()
+        );
 
-        restartSimulation();
+    // Actualizar etiquetas
+    labels = labels.data(filteredNodes, d => d.id)
+    .join(
+        enter => enter.append("text")
+            .attr("class", "node-id")
+            .text(d => `[${d.id}]`)
+            .attr("text-anchor", "left")
+            .attr("dy", "-0.5em")
+            .attr("dx", "0.5em"),
+        update => update,
+        exit => exit.remove()
+    );
 
-    }
+    restartSimulation();
+}
     
     //funciones para links
     
@@ -465,17 +477,64 @@ function generateLinks(nodes) {
         });
         }
 
-        function toggleChildren(groupId) {
-         allNodes.forEach(n => {
-         if (n.parent === groupId) {
-              n.visible = !n.visible;
-            }
-            });
-
-            
-
-            updateNodes();
+    // funciones para hijes
+    function toggleChildren(groupId) {
+     allNodes.forEach(n => {
+     if (n.parent === groupId) {
+          n.visible = !n.visible;
         }
+        });
+        
+        updateNodes();
+    }
+
+    function childRepulsionForce() {
+    const CHILD_REPULSION_STRENGTH = 2; // Ajusta este valor según necesites
+    const CHILD_REPULSION_RADIUS = 1000; // Radio de repulsión entre hermanos
+    
+    return function(alpha) {
+        //const nodes = this.nodes;
+        
+        // Agrupar nodos hijos por padre
+        const childrenByParent = {};
+        allNodes.forEach(node => {
+            if (node.parent) {
+                if (!childrenByParent[node.parent]) {
+                    childrenByParent[node.parent] = [];
+                }
+                childrenByParent[node.parent].push(node);
+            }
+        });
+        
+        // Aplicar repulsión entre hermanos
+        Object.values(childrenByParent).forEach(siblings => {
+            if (siblings.length > 1) {
+                for (let i = 0; i < siblings.length; i++) {
+                    for (let j = i + 1; j < siblings.length; j++) {
+                        const nodeA = siblings[i];
+                        const nodeB = siblings[j];
+                        
+                        const dx = nodeB.x - nodeA.x;
+                        const dy = nodeB.y - nodeA.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < CHILD_REPULSION_RADIUS && distance > 0) {
+                            const strength = (CHILD_REPULSION_RADIUS - distance) / CHILD_REPULSION_RADIUS * CHILD_REPULSION_STRENGTH * alpha;
+                            const fx = (dx / distance) * strength;
+                            const fy = (dy / distance) * strength;
+                            
+                            nodeA.vx -= fx;
+                            nodeA.vy -= fy;
+                            nodeB.vx += fx;
+                            nodeB.vy += fy;
+                        }
+                    }
+                }
+            }
+        });
+    };
+    }
+
 
 
         // Inicializar SVG
@@ -486,7 +545,8 @@ function generateLinks(nodes) {
         simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).strength(d => d.weight * LINK_FORCE_MULTIPLICATOR))
             .force("charge", d3.forceManyBody().strength(isMobile? NODE_FORCE_MOBILE : NODE_FORCE))
-            .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02));
+            .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02))
+            .force("childRepulsion", childRepulsionForce());
 
         // Dibujar enlaces
         let link = svg.append("g")
