@@ -614,7 +614,7 @@ function generateLinks(nodes) {
 
         svg.on("touchstart", (event) => {
         if (event.target.tagName === "svg") {
-            link.transition().attr("stroke-opacity", LINK_BASE_OPACITY);
+            link.transition().attr("stroke-opacity", d => tagOpacity[d.tag]);
         }
 });
 
