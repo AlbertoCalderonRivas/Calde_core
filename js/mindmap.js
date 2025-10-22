@@ -15,10 +15,10 @@ const LINK_FORCE_MULTIPLICATOR = 0.009;
 const LINK_WIDTH = 1;
 const LINK_GROUP_WIDTH = 2;
 
-const ANIMATION_INTERVAL = 250; //Animación de los nodos al cargar la página
-const ANIMATION_INTERVAL_RANDOM = 220;
+const ANIMATION_INTERVAL = 1000; //Animación de los nodos al cargar la página
+const ANIMATION_INTERVAL_RANDOM = 250;
 
-let svg, simulation, width, height, isMobile, link, labels, node;
+let svg, simulation, width, height, isMobile, link, labels, node, skipAnimationFlag = false;
 
 const tags = ["arq", "inm", "ins", "inv", "par", "group"];
 window.activeTags = new Set(); //lista de tags activos
@@ -137,20 +137,21 @@ fetch("projects.json") //contiene un array con todos los proyectos
       }
     }
 
- function animateMindmapAtStart(allNodesToShow, allLinksAvailable) {
-    let currentNodeIndex = 0;
-    const displayedNodeIds = new Set();
-    let currentNodes = [];
-    let currentLinks = [];
+    function animateMindmapAtStart(allNodesToShow, allLinksAvailable) {
+      let currentNodeIndex = 0;
+      const displayedNodeIds = new Set();
+      let currentNodes = [];
+      let currentLinks = [];
 
-    function addNextNode() {
-
-        console.log("Añadiendo nodo", currentNodeIndex + 1, "de", allNodesToShow.length);
-        if (currentNodeIndex == allNodesToShow.length-1) {
-            
-            
-            showFilters();
-           
+      function addNextNode() {
+        console.log(
+          "Añadiendo nodo",
+          currentNodeIndex + 1,
+          "de",
+          allNodesToShow.length
+        );
+        if (currentNodeIndex == allNodesToShow.length - 1) {
+          showFilters();
         }
 
         // Añadir el siguiente nodo
@@ -158,181 +159,215 @@ fetch("projects.json") //contiene un array con todos los proyectos
 
         // Inicializar posición en el centro si no existe
         if (newNode.x === undefined || newNode.y === undefined) {
-            newNode.x = width / 2;
-            newNode.y = height / 2;
+          newNode.x = width / 2;
+          newNode.y = height / 2;
         }
 
         currentNodes.push(newNode);
         displayedNodeIds.add(newNode.id);
 
         // Buscar enlaces que se puedan mostrar
-        const newLinks = allLinksAvailable.filter(link => {
-            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-            return displayedNodeIds.has(sourceId) && 
-               displayedNodeIds.has(targetId) &&
-               !currentLinks.some(l => {
-                   const lSourceId = typeof l.source === 'object' ? l.source.id : l.source;
-                   const lTargetId = typeof l.target === 'object' ? l.target.id : l.target;
-                   return lSourceId === sourceId && lTargetId === targetId && l.tag === link.tag;
-               });
+        const newLinks = allLinksAvailable.filter((link) => {
+          const sourceId =
+            typeof link.source === "object" ? link.source.id : link.source;
+          const targetId =
+            typeof link.target === "object" ? link.target.id : link.target;
+          return (
+            displayedNodeIds.has(sourceId) &&
+            displayedNodeIds.has(targetId) &&
+            !currentLinks.some((l) => {
+              const lSourceId =
+                typeof l.source === "object" ? l.source.id : l.source;
+              const lTargetId =
+                typeof l.target === "object" ? l.target.id : l.target;
+              return (
+                lSourceId === sourceId &&
+                lTargetId === targetId &&
+                l.tag === link.tag
+              );
+            })
+          );
         });
 
         currentLinks.push(...newLinks);
-    
+
         // Actualizar simulación con los nodos y enlaces actuales
         simulation.nodes(currentNodes);
         simulation.force("link").links(currentLinks);
         simulation.force("childRepulsion", childRepulsionForce());
-    
+
         // Actualizar enlaces en el DOM
-        link = link.data(currentLinks, d => {
-            const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
-            const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+        link = link
+          .data(currentLinks, (d) => {
+            const sourceId =
+              typeof d.source === "object" ? d.source.id : d.source;
+            const targetId =
+              typeof d.target === "object" ? d.target.id : d.target;
             return `${sourceId}-${targetId}-${d.tag}-${d.curvature}`;
-        })
-        .join(
-            enter => enter.append("path")
+          })
+          .join(
+            (enter) =>
+              enter
+                .append("path")
                 .attr("class", "link")
-                .attr("stroke-width", d => d.tag === "group" ? LINK_GROUP_WIDTH : LINK_WIDTH)
+                .attr("stroke-width", (d) =>
+                  d.tag === "group" ? LINK_GROUP_WIDTH : LINK_WIDTH
+                )
                 .attr("fill", "none")
-                .attr("stroke", d => tagColors[d.tag])
-                .attr("stroke-opacity", d => tagOpacity[d.tag]),
-            update => update,
-            exit => exit.remove()
-        );
-    
+                .attr("stroke", (d) => tagColors[d.tag])
+                .attr("stroke-opacity", (d) => tagOpacity[d.tag]),
+            (update) => update,
+            (exit) => exit.remove()
+          );
+
         // Actualizar nodos en el DOM
-        node = node.data(currentNodes, d => d.id)
-            .join(
-                enter => enter.append("circle")
-                    .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
-                    .attr("class", "node")
-                    .call(drag(simulation))
-                    .on("mouseover touchstart", handleNodeHover)
-                    .on("mouseout touchend", handleNodeUnhover),
-                update => update,
-                exit => exit.remove()
-            );
-    
+        node = node
+          .data(currentNodes, (d) => d.id)
+          .join(
+            (enter) =>
+              enter
+                .append("circle")
+                .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
+                .attr("class", "node")
+                .call(drag(simulation))
+                .on("mouseover touchstart", handleNodeHover)
+                .on("mouseout touchend", handleNodeUnhover),
+            (update) => update,
+            (exit) => exit.remove()
+          );
+
         // Actualizar etiquetas en el DOM
-        labels = labels.data(currentNodes, d => d.id)
-            .join(
-                enter => enter.append("text")
-                    .attr("class", "node-id")
-                    .text(d => `[${d.id}]`)
-                    .attr("text-anchor", "left")
-                    .attr("dy", "-0.5em")
-                    .attr("dx", "0.5em"),
-                update => update,
-                exit => exit.remove()
-            );
-    
+        labels = labels
+          .data(currentNodes, (d) => d.id)
+          .join(
+            (enter) =>
+              enter
+                .append("text")
+                .attr("class", "node-id")
+                .text((d) => `[${d.id}]`)
+                .attr("text-anchor", "left")
+                .attr("dy", "-0.5em")
+                .attr("dx", "0.5em"),
+            (update) => update,
+            (exit) => exit.remove()
+          );
+
         // Reiniciar simulación con un pequeño impulso
-        simulation.alpha(0.3).restart();
-    
+        restartSimulation();
+
         currentNodeIndex++;
-    
+
+
+        //Comprobar si queremos hacer skip a la animación
+        const skipBtn = document.getElementById("skip-btn");
+        skipBtn.onclick = function () {
+            skipAnimationFlag = true;
+        }
+
+
+
+        if (skipAnimationFlag && currentNodeIndex < allNodesToShow.length) {
+          addNextNode();
+          return;
+        }
+
         // Programar siguiente nodo con tiempo aleatorio
         if (currentNodeIndex < allNodesToShow.length) {
-            const randomDelay = ANIMATION_INTERVAL + 
-                           (Math.random() * 2 - 1) * ANIMATION_INTERVAL_RANDOM;
-            setTimeout(addNextNode, randomDelay);
+          const randomDelay = Math.max(
+            50,
+            ANIMATION_INTERVAL +
+              (Math.random() * 2 - 1) * ANIMATION_INTERVAL_RANDOM -
+              (ANIMATION_INTERVAL * currentNodeIndex * 1.5) /
+                allNodesToShow.length
+          );
+          
+          setTimeout(addNextNode, randomDelay);
         }
-    }
+      }
 
-    // Iniciar la animación
-    addNextNode();
-}
-function showFilters() {
-    const filtersDiv = document.getElementById('filters');
+      // Iniciar la animación
+      addNextNode();
+    }
     
-    // Pequeño delay para que sea más notable
-    setTimeout(() => {
-        filtersDiv.style.transform = 'scaleY(1)';
-        filtersDiv.classList.add('visible');
-    }, 300); // 300ms de delay después de que terminen los nodos
-}
-
     function restartSimulation() {
-      simulation.alpha(1).restart();
+        simulation.alpha(1).restart();
     }
-
+    
     function fixBounds() {
-      const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
-      const BOUNDMUL = isMobile ? BOUNDSMUL_MOBILE : BOUNDSMUL_BASE;
-      const graphNodes = simulation.nodes();
-
-      const filtersElement = document.getElementById("filters");
-      const filtersRect = filtersElement.getBoundingClientRect();
-
-      // Calcular el límite inferior botones
-      const bottomMargin = 39; // margen adicional en píxeles
-      const lowerBoundY = filtersRect.top - bottomMargin;
-
-      // Límites horizontales del contenedor de botones
-      const leftBoundX = filtersRect.left - 10; // 10px de margen extra
-      const rightBoundX = filtersRect.right - 2;
-
-      graphNodes.forEach((node) => {
-        // Limitar posición X general (límites de la pantalla)
-        if (node.x - NODE_R_BOUND < 0) {
-          node.x = NODE_R_BOUND;
-          node.vx = 0;
-        }
-        if (node.x + 7 * NODE_R_BOUND > width) {
-          node.x = width - 7 * NODE_R_BOUND;
-          node.vx = 0;
-        }
-
-        // Limitar posición Y general
-        if (node.y - 2 * NODE_R_BOUND < 0) {
-          node.y = 2 * NODE_R_BOUND;
-          node.vy = 0;
-        }
-
-        // Comprobar si el nodo está sobre el área de los botones
-        if (
-          node.y + NODE_R_BOUND > lowerBoundY &&
-          node.x >= leftBoundX &&
-          node.x <= rightBoundX
-        ) {
-          // Si está sobre los botones, empujarlo hacia arriba
-          node.y = lowerBoundY - NODE_R_BOUND;
-          node.vy = 0;
-        } else if (node.y + BOUNDMUL * NODE_R_BOUND > height) {
-          node.y = height - BOUNDMUL * NODE_R_BOUND;
-          node.vy = 0;
-        }
-      });
+        const NODE_R_BOUND = isMobile ? NODE_R_ZOOM_MOBILE : NODE_R_ZOOM;
+        const BOUNDMUL = isMobile ? BOUNDSMUL_MOBILE : BOUNDSMUL_BASE;
+        const graphNodes = simulation.nodes();
+        
+        const filtersElement = document.getElementById("filters");
+        const filtersRect = filtersElement.getBoundingClientRect();
+        
+        // Calcular el límite inferior botones
+        const bottomMargin = 39; // margen adicional en píxeles
+        const lowerBoundY = filtersRect.top - bottomMargin;
+        
+        // Límites horizontales del contenedor de botones
+        const leftBoundX = filtersRect.left - 10; // 10px de margen extra
+        const rightBoundX = filtersRect.right - 2;
+        
+        graphNodes.forEach((node) => {
+            // Limitar posición X general (límites de la pantalla)
+            if (node.x - NODE_R_BOUND < 0) {
+                node.x = NODE_R_BOUND;
+                node.vx = 0;
+            }
+            if (node.x + 7 * NODE_R_BOUND > width) {
+                node.x = width - 7 * NODE_R_BOUND;
+                node.vx = 0;
+            }
+            
+            // Limitar posición Y general
+            if (node.y - 2 * NODE_R_BOUND < 0) {
+                node.y = 2 * NODE_R_BOUND;
+                node.vy = 0;
+            }
+            
+            // Comprobar si el nodo está sobre el área de los botones
+            if (
+                node.y + NODE_R_BOUND > lowerBoundY &&
+                node.x >= leftBoundX &&
+                node.x <= rightBoundX
+            ) {
+                // Si está sobre los botones, empujarlo hacia arriba
+                node.y = lowerBoundY - NODE_R_BOUND;
+                node.vy = 0;
+            } else if (node.y + BOUNDMUL * NODE_R_BOUND > height) {
+                node.y = height - BOUNDMUL * NODE_R_BOUND;
+                node.vy = 0;
+            }
+        });
     }
-
+    
     function updateResponsiveProperties() {
-      // Actualiza el flag
-      isMobile = window.matchMedia("(max-width: 768px)").matches;
-
-      // Actualiza las fuerzas que dependen de isMobile
-      simulation.force(
-        "charge",
-        d3.forceManyBody().strength(isMobile ? NODE_FORCE_MOBILE : NODE_FORCE)
-      );
-
-      // Actualiza el radio de los nodos
-      svg
+        // Actualiza el flag
+        isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+        // Actualiza las fuerzas que dependen de isMobile
+        simulation.force(
+            "charge",
+            d3.forceManyBody().strength(isMobile ? NODE_FORCE_MOBILE : NODE_FORCE)
+        );
+        
+        // Actualiza el radio de los nodos
+        svg
         .selectAll("circle")
         .transition()
         .duration(200)
         .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE);
     }
-
+    
     //funciones para filtrado de tags
-
+    
     function createFilterButtons() {
-      activeTags.clear();
-      const container = d3.select(".filter-container");
-      const preferedTags = tags.filter((tag) => tag !== "group"); // Excluir "group" de los botones
-
-      container
+        activeTags.clear();
+        const container = d3.select(".filter-container");
+        const preferedTags = tags.filter((tag) => tag !== "group"); // Excluir "group" de los botones
+        
+        container
         .selectAll(".filter-btn")
         .data(preferedTags)
         .join("button")
@@ -340,15 +375,30 @@ function showFilters() {
         .text((d) => d.toUpperCase())
         .attr("data-tag", (d) => d)
         .on("click", function (event, tag) {
-          d3.select(this).classed("active", !d3.select(this).classed("active"));
-          if (activeTags.has(tag)) {
-            activeTags.delete(tag);
-          } else {
-            activeTags.add(tag);
-          }
-
-          updateNodes();
+            d3.select(this).classed("active", !d3.select(this).classed("active"));
+            if (activeTags.has(tag)) {
+                activeTags.delete(tag);
+            } else {
+                activeTags.add(tag);
+            }
+            
+            updateNodes();
         });
+    }
+
+    function showFilters() {
+      const filtersDiv = document.getElementById("filter-container");
+      const skipDiv = document.getElementById("skip-animation");
+
+      setTimeout(() => {
+      skipDiv.style.transform = "scaleX(0)";
+        }, 300);
+
+      
+      setTimeout(() => {
+        filtersDiv.style.transform = "scaleX(1)";
+       
+      }, 1300); 
     }
 
     function updateNodesInstant(nodesToShow, linksToShow) {
@@ -417,18 +467,18 @@ function showFilters() {
       simulation.alpha(0.3).restart();
     }
 
-   function updateNodes() {
-    simulation.stop();
+    function updateNodes() {
+      simulation.stop();
 
-    const visibles = allNodes.filter((n) => n.visible !== false);
+      const visibles = allNodes.filter((n) => n.visible !== false);
 
-    // Si no hay filtros activos, se muestran todos los nodos
-    if (activeTags.size === 0) {
+      // Si no hay filtros activos, se muestran todos los nodos
+      if (activeTags.size === 0) {
         window.filteredNodes = visibles.slice();
-    } else {
+      } else {
         // Filtrar nodos que cumplen con los tags activos
         const tagFilteredNodes = visibles.filter((node) =>
-            Array.from(activeTags).every((tag) => node.tags.includes(tag))
+          Array.from(activeTags).every((tag) => node.tags.includes(tag))
         );
 
         // Crear un Set para evitar duplicados
@@ -436,37 +486,31 @@ function showFilters() {
 
         // Agregar nodos hijos visibles cuyos padres estén en los nodos filtrados
         tagFilteredNodes.forEach((node) => {
-            if (node.isGroup) {
-                // Buscar hijos de este nodo grupo
-                const children = visibles.filter(
-                    (child) => child.parent === node.id
-                );
-                children.forEach((child) => {
-                    finalNodes.add(child);
-                });
-            }
+          if (node.isGroup) {
+            // Buscar hijos de este nodo grupo
+            const children = visibles.filter(
+              (child) => child.parent === node.id
+            );
+            children.forEach((child) => {
+              finalNodes.add(child);
+            });
+          }
         });
 
         window.filteredNodes = Array.from(finalNodes);
-    }
+      }
 
-    enText.innerText = ``;
-    // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
-    if (filteredNodes.length === 0) {
-        console.warn(
-            "No hay nodos que cumplan los filtros activos:",
-            Array.from(activeTags)
-        );
+      enText.innerText = ``;
+      // Si filteredNodes queda vacío, evitamos actualizar y avisamos en consola
+      if (filteredNodes.length === 0) {
         enText.innerText = `No fitting criteria`;
-        return; // Salir si no hay nodos
+      }
+
+      document.dispatchEvent(new Event("filteredNodesUpdated"));
+      const newLinks = generateLinks(filteredNodes);
+
+      updateNodesInstant(filteredNodes, newLinks);
     }
-
-    document.dispatchEvent(new Event("filteredNodesUpdated"));
-    const newLinks = generateLinks(filteredNodes);
-
-    // Usar actualización INSTANTÁNEA (sin animación)
-    updateNodesInstant(filteredNodes, newLinks);
-}
 
     //funciones para links
 
@@ -634,6 +678,8 @@ function showFilters() {
         });
     }
 
+    
+
     // funciones para hijes
     function toggleChildren(groupId) {
       allNodes.forEach((n) => {
@@ -721,61 +767,6 @@ function showFilters() {
     let labels = svg.append("g").selectAll("text");
     let node = svg.append("g").selectAll("circle");
 
-    /* Crear simulación
-    simulation = d3
-      .forceSimulation(nodes)
-      .force(
-        "link",
-        d3
-          .forceLink(links)
-          .id((d) => d.id)
-          .strength((d) => d.weight * LINK_FORCE_MULTIPLICATOR)
-      )
-      .force(
-        "charge",
-        d3.forceManyBody().strength(isMobile ? NODE_FORCE_MOBILE : NODE_FORCE)
-      )
-      .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02))
-      .force("childRepulsion", childRepulsionForce());
-
-    // Dibujar enlaces
-    let link = svg
-      .append("g")
-      .selectAll("path")
-      .data(links)
-      .join("path")
-      .attr("class", "link")
-      .attr("stroke-width", (d) =>
-        d.tag === "group" ? LINK_GROUP_WIDTH : LINK_WIDTH
-      )
-      .attr("stroke-opacity", LINK_BASE_OPACITY)
-      .attr("fill", "none")
-      .attr("stroke", (d) => tagColors[d.tag]);
-
-    // Crear etiquetas
-    let labels = svg
-      .append("g")
-      .selectAll("text")
-      .data(nodes)
-      .join("text")
-      .attr("class", "node-id")
-      .text((d) => `[${d.id}]`) // Mostrar el ID
-      .attr("text-anchor", "left")
-      .attr("dy", "-0.5em")
-      .attr("dx", "0.5em");
-
-    // Dibujar nodos
-    let node = svg
-      .append("g")
-      .selectAll("circle")
-      .data(nodes)
-      .join("circle")
-      .attr("class", "node")
-      .attr("r", isMobile ? NODE_R_BASE_MOBILE : NODE_R_BASE)
-      .call(drag(simulation))
-      .on("mouseover touchstart", handleNodeHover)
-      .on("mouseout touchend", handleNodeUnhover);
-*/
     // Actualizar posiciones
     simulation.on("tick", () => {
       fixBounds();
@@ -786,7 +777,7 @@ function showFilters() {
       labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
     });
 
-    // Iniciar animación progresiva
+    // Iniciar animación al cargar la página
     animateMindmapAtStart(nodes, links);
 
     //initSVG();
