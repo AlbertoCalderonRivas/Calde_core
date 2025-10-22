@@ -5,7 +5,7 @@ const menuItems = document.querySelectorAll(".navigation li");
 
 const navigationItems = [
     { href: "/proyectos/WIP", label: "Works", short: "W" },
-    { href: "/proyectos/WIP", label: "Courses", short: "C" },
+    { href: "https://calde_core.pages.gay", label: "Experiments", short: "E" },
     { href: "/proyectos/WIP", label: "Blog", short: "B" },
     { href: "/navigation/AboutMe", label: "About Me", short: "A" }
 ];
