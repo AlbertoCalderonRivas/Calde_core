@@ -18,7 +18,7 @@ const LINK_GROUP_WIDTH = 2;
 const ANIMATION_INTERVAL = 1000; //Animación de los nodos al cargar la página
 const ANIMATION_INTERVAL_RANDOM = 250;
 
-let svg, simulation, width, height, isMobile, link, labels, node, skipAnimationFlag = false;
+let svg, simulation, width, height, isMobile, link, labels, node, skipAnimationFlag = false, animationEnded = false;
 
 const tags = ["arq", "inm", "ins", "inv", "par", "group"];
 window.activeTags = new Set(); //lista de tags activos
@@ -268,6 +268,7 @@ fetch("projects.json") //contiene un array con todos los proyectos
 
         if (skipAnimationFlag && currentNodeIndex < allNodesToShow.length) {
           addNextNode();
+          animationEnded = true;
           return;
         }
 
@@ -282,6 +283,9 @@ fetch("projects.json") //contiene un array con todos los proyectos
           );
           
           setTimeout(addNextNode, randomDelay);
+        }
+        else {
+          animationEnded = true;
         }
       }
 
@@ -682,6 +686,11 @@ fetch("projects.json") //contiene un array con todos los proyectos
 
     // funciones para hijes
     function toggleChildren(groupId) {
+     
+     if(!animationEnded){
+        return;
+      }
+     
       allNodes.forEach((n) => {
         if (n.parent === groupId) {
           n.visible = !n.visible;
