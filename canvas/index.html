@@ -56,14 +56,14 @@
         .node.group {
             background: rgba(80, 80, 120, 0.15);
             border: 2px solid #505078;
-            border-radius: 8px;
-            z-index: 1;
+            border-radius: 1px;
+            z-index: 0;
         }
 
         .node.group .group-label {
             position: absolute;
-            top: -25px;
-            left: 0;
+            top: 0;
+            left: 5px;
             font-weight: bold;
             font-size: 16px;
             color: #a0a0ff;
@@ -1027,8 +1027,33 @@
         // Event listeners para arrastrar el canvas
         const container = document.getElementById('canvas-container');
         
+        container.addEventListener('touchstart', (e) => {
+            if (e.target === container || e.target.id === 'canvas' || e.target.id === 'nodes' || e.target.id === 'edges' || e.target.className === 'node group') {
+                isDragging = true;
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                container.classList.add('grabbing');
+            }
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+            }
+        });
+
+        container.addEventListener('touchend', () => {
+            isDragging = false;
+            container.classList.remove('grabbing');
+        });
+
+
         container.addEventListener('mousedown', (e) => {
-            if (e.target === container || e.target.id === 'canvas' || e.target.id === 'nodes' || e.target.id === 'edges') {
+            if (e.target === container || e.target.id === 'canvas' || e.target.id === 'nodes' || e.target.id === 'edges' || e.target.className === 'node group') {
                 isDragging = true;
                 startX = e.clientX - translateX;
                 startY = e.clientY - translateY;
