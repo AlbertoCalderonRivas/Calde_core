@@ -1,1095 +1,505 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D_Primer_Paper Canvas</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Visualizator</title>
+    <link rel="icon" href="\assets\favicon.ico" type="image/x-icon" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            overflow: hidden;
-            background: #1e1e1e;
-            color: #dcddde;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        overflow: hidden;
+        background: #1e1e1e;
+        color: #dcddde;
+      }
 
-        #canvas-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            cursor: grab;
-            overflow: hidden;
-        }
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        cursor: grab;
+        overflow: hidden;
+      }
 
-        #canvas-container.grabbing {
-            cursor: grabbing;
-        }
+      #canvas-container.grabbing {
+        cursor: grabbing;
+      }
 
-        #canvas {
-            position: absolute;
-            transform-origin: 0 0;
-        }
+      #canvas {
+        position: absolute;
+        transform-origin: 0 0;
+      }
 
-        .node {
-            position: absolute;
-            background: #2d2d2d;
-            border: 1px solid #404040;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            overflow: auto;
-            transition: box-shadow 0.2s;
-        }
+      .node {
+        position: absolute;
+        background: #2d2d2d;
+        border: 1px solid #404040;
+        border-radius: 4px;
+        padding: 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        overflow: auto;
+        transition: box-shadow 0.2s;
+      }
 
-        .node:hover {
-            box-shadow: 0 0 10px rgba(100, 100, 255, 0.3);
-            z-index: 100;
-        }
+      .node:hover {
+        box-shadow: 0 0 10px rgba(100, 100, 255, 0.3);
+        z-index: 100;
+      }
 
-        .node.group {
-            background: rgba(80, 80, 120, 0.15);
-            border: 2px solid #505078;
-            border-radius: 1px;
-            z-index: 0;
-        }
+      .node.group {
+        background: rgba(80, 80, 120, 0.15);
+        border: 2px solid #505078;
+        border-radius: 1px;
+        z-index: 0;
+      }
 
-        .node.group .group-label {
-            position: absolute;
-            top: 0;
-            left: 5px;
-            font-weight: bold;
-            font-size: 16px;
-            color: #a0a0ff;
-        }
+      .node.group .group-label {
+        position: absolute;
+        top: 0;
+        left: 5px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #a0a0ff;
+      }
 
-        .node h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+      .node h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
 
-        .node h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
+      .node h2 {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 6px;
+      }
 
-        .node h3 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #8ab4f8;
-        }
+      .node h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #8ab4f8;
+      }
 
-        .node h4 {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
+      .node h4 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
 
-        .node h5 {
-            font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: #ffa07a;
-        }
+      .node h5 {
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: #ffa07a;
+      }
 
-        .node h6 {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
+      .node h6 {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
 
-        .node a {
-            color: #8ab4f8;
-            text-decoration: none;
-        }
+      .node a {
+        color: #8ab4f8;
+        text-decoration: none;
+      }
 
-        .node a:hover {
-            text-decoration: underline;
-        }
+      .node a:hover {
+        text-decoration: underline;
+      }
 
-        .node em {
-            font-style: italic;
-            color: #d4a5d4;
-        }
+      .node em {
+        font-style: italic;
+        color: #d4a5d4;
+      }
 
-        .node strong {
-            font-weight: bold;
-            color: #ffd700;
-        }
+      .node strong {
+        font-weight: bold;
+        color: #ffd700;
+      }
 
-        .text-center {
-            text-align: center;
-        }
+      .text-center {
+        text-align: center;
+      }
 
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 10000px;
-            height: 10000px;
-            pointer-events: none;
-            z-index: 50;
-            overflow: visible;
-        }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 10000px;
+        height: 10000px;
+        pointer-events: none;
+        z-index: 50;
+        overflow: visible;
+      }
 
-        .edge {
-            stroke: #8080ff;
-            stroke-width: 2;
-            fill: none;
-        }
+      .edge {
+        stroke: #8080ff;
+        stroke-width: 2;
+        fill: none;
+      }
 
-        .edge-arrow {
-            fill: #8080ff;
-        }
+      .edge-arrow {
+        fill: #8080ff;
+      }
 
-        #controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #2d2d2d;
-            border: 1px solid #404040;
-            border-radius: 8px;
-            padding: 15px;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        }
-
-        #controls button {
-            display: block;
-            width: 100%;
-            padding: 8px 12px;
-            margin: 5px 0;
-            background: #404040;
-            color: #dcddde;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        #controls button:hover {
-            background: #505050;
-        }
-
-        #zoom-info {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #999;
-        }
+      
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="canvas-container">
-        <div id="canvas">
-            <svg id="edges"></svg>
-            <div id="nodes"></div>
-        </div>
+      <div id="canvas">
+        <svg id="edges"></svg>
+        <div id="nodes"></div>
+      </div>
     </div>
 
-    <div id="controls">
-        <button onclick="zoomIn()">Zoom +</button>
-        <button onclick="zoomOut()">Zoom -</button>
-        <button onclick="resetView()">Reset View</button>
-        <div id="zoom-info">Zoom: 100%</div>
-    </div>
+    
 
     <script>
-        // Datos del canvas embebidos
-        const canvasData = 
-{
-	"nodes":[
-		{"id":"0a31bb1a4690374e","type":"group","x":-2000,"y":280,"width":2320,"height":1245,"label":"Marco teórico"},
-		{"id":"e69f207a8843f000","type":"group","x":-1060,"y":-100,"width":440,"height":240,"label":" "},
-		{
-			"id":"014c4c372dc41364",
-			"type":"text",
-			"text":"# DATOS EN TRÁNSITO",
-			"styleAttributes":{"textAlign":"center"},
-			"x":-1040,
-			"y":-80,
-			"width":400,
-			"height":80
-		},
-		{
-			"id":"5d5b506341ea6281",
-			"type":"text",
-			"text":"## MEDIOS DE PROPAGACIÓN",
-			"styleAttributes":{"textAlign":"center"},
-			"x":-1040,
-			"y":40,
-			"width":400,
-			"height":80
-		},
-		{
-			"id":"7b77561f3999a58b",
-			"type":"text",
-			"text":"Link al documento de trabajo:\n\nhttps://docs.google.com/document/d/1lgNuWXEPw1ADguAq3wiX_QiIRHMJzvnXpN6eDNOH1vA/edit?usp=sharing\n\n",
-			"styleAttributes":{},
-			"x":-2400,
-			"y":720,
-			"width":260,
-			"height":160
-		},
-		{
-			"id":"e89a0ac856ca4d22",
-			"type":"text",
-			"text":"Se da por sentado su existencia\n- resolución \"demasiado\" técnica\n- escala \"inabarcable\" \n- muchas veces invisible\n\nMucho más estática ",
-			"styleAttributes":{},
-			"x":-1160,
-			"y":880,
-			"width":300,
-			"height":260
-		},
-		{
-			"id":"1da0532163509216",
-			"type":"text",
-			"text":"Muy explorado\n- Talleres participativos, lab ciudadanos, encuestas abiertas, asambleas vecinales\n- Impacto inmediato\n- escala reducida, involucra pocos agentes\n\nArquitectura de elementos\n",
-			"styleAttributes":{},
-			"x":-1140,
-			"y":525,
-			"width":260,
-			"height":290
-		},
-		{
-			"id":"90c90bb36475ec11",
-			"type":"text",
-			"text":":: Bibliografía::\n\n- Arquitectura FLOSS - Enrique Espinosa\n- [https://www.tandfonline.com/doi/full/10.1080/00049182.2025.2466879#d1e126](https://www.tandfonline.com/doi/full/10.1080/00049182.2025.2466879#d1e126)\n",
-			"styleAttributes":{},
-			"x":-1140,
-			"y":1220,
-			"width":260,
-			"height":280
-		},
-		{
-			"id":"90030746cefbc4b1",
-			"type":"text",
-			"text":":: Bibliografía::\n\nHenri Lefebvre - Le Droit à la Ville\n\nIsabel Stengers - *La infraestructura es un intersticio sobre el que actuar*\n",
-			"styleAttributes":{},
-			"x":-760,
-			"y":1280,
-			"width":260,
-			"height":220
-		},
-		{
-			"id":"2fd9e2f52a0eb89e",
-			"type":"text",
-			"text":"¿por qué actuar sobre las infraestructuras?",
-			"styleAttributes":{},
-			"x":-740,
-			"y":670,
-			"width":220,
-			"height":100
-		},
-		{
-			"id":"d4fc73d68e1f788e",
-			"type":"text",
-			"text":"### Sustrato del poder\nEl diseño de la ciudad se ve supeditado y es totalmente dependiente de la redde infraestructuras. Controlar la red de infraestructuras es controlar la ciudad",
-			"styleAttributes":{},
-			"x":-340,
-			"y":305,
-			"width":260,
-			"height":240
-		},
-		{
-			"id":"1bf9536a0aac8f2b",
-			"type":"text",
-			"text":"### Invisibilización\nEstán sufriendo un proceso de cajanegrización, literalmente se ocultan bajo tierra en registros y alcantarillas.\n\n**Mapear un barrio es un paseo, mapear las infraestructuras requiere permisos**",
-			"styleAttributes":{},
-			"x":-340,
-			"y":570,
-			"width":260,
-			"height":300
-		},
-		{
-			"id":"8bee07f6b187b4df",
-			"type":"text",
-			"text":"### IMPACTO EN LE CIUDADANE\n\n“Software comes and goes, but hardware is forever”\n\nLa cualidad y calidad de las infraestructuras es directamente proporcional a lo que se puede o no se puede hacer en la capa superficial",
-			"styleAttributes":{},
-			"x":-340,
-			"y":920,
-			"width":260,
-			"height":345
-		},
-		{
-			"id":"b6f6f480d9521f0d",
-			"type":"text",
-			"text":"¿Seguridad?",
-			"styleAttributes":{},
-			"x":20,
-			"y":650,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"a6d4c726b44f0b76",
-			"type":"text",
-			"text":"privada",
-			"styleAttributes":{},
-			"x":40,
-			"y":295,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"6c0c5369a64d2227",
-			"type":"text",
-			"text":"pública",
-			"styleAttributes":{},
-			"x":40,
-			"y":395,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"1330c4d0c2aaeaf0",
-			"type":"text",
-			"text":"comunitaria",
-			"styleAttributes":{},
-			"x":40,
-			"y":495,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"43eb2ad9ae890315",
-			"type":"text",
-			"text":"necesidad de retomar agencia",
-			"styleAttributes":{},
-			"x":20,
-			"y":1063,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"ef010c1688107c7d",
-			"type":"text",
-			"text":"Deskilling",
-			"styleAttributes":{},
-			"x":20,
-			"y":765,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"73fd2aafea29ba20",
-			"type":"text",
-			"text":":: Bibliografía ::\n- Graham & Marvin: Splintering Urbanism\n- Manuel Castells\n- Keller Easterling: Extrastatecraft\n- Benjamin Bratton: The Stack",
-			"styleAttributes":{},
-			"x":-1980,
-			"y":1220,
-			"width":440,
-			"height":240
-		},
-		{
-			"id":"783d5055d8571dd1",
-			"type":"text",
-			"text":"##### DISEÑO DE LA CIUDAD",
-			"styleAttributes":{},
-			"x":-1880,
-			"y":820,
-			"width":240,
-			"height":60
-		},
-		{
-			"id":"52664eb06b45d1d3",
-			"type":"text",
-			"text":"*CAPA SUPERFICIAL*\n- dotaciones arquitectónicas\n- edificaciones, zonas verdes, hitos",
-			"styleAttributes":{},
-			"x":-1520,
-			"y":580,
-			"width":260,
-			"height":180
-		},
-		{
-			"id":"21d1b4572e618368",
-			"type":"text",
-			"text":"*CAPA SUBTERRÁNEA*\n- red de servicios\n- agua, gas, electricidad, telecomunicaciones",
-			"styleAttributes":{},
-			"x":-1520,
-			"y":920,
-			"width":260,
-			"height":180
-		},
-		{
-			"id":"dcd3c89d98000649",
-			"type":"text",
-			"text":"DISEÑO CON COLABORACIÓN CIUDADANA",
-			"styleAttributes":{},
-			"x":-1140,
-			"y":380,
-			"width":260,
-			"height":80
-		},
-		{
-			"id":"190cffe860a495f5",
-			"type":"text",
-			"text":"##### Razones\n- Políticas (la infraestructura de internet se privatiza y su diseño depende de actores privados con poca o nula presión de los gobiernos) \n    \n- Económicas (la viabilidad de la expansión se mide en función de su potencial comercial, las zonas con menor densidad poblacional tienen un menor porcentaje de ganancia) \n    \n- Legislativas (la instalación de cables de fibra por las vías y espacios públicos requiere procesos complejos de licitaciones y permisos de obra civil que limitan quien y cuando puede realizar dichas instalaciones)\n    \n- Escala (la naturaleza de esta infraestructura requiere la coordinación y compatibilización de sistemas a escalas regionales, nacionales y mundiales)",
-			"styleAttributes":{},
-			"x":-420,
-			"y":1620,
-			"width":720,
-			"height":320
-		},
-		{
-			"id":"1642a305cc86f01d",
-			"type":"text",
-			"text":"¿Cual es la diferencia entre el diseño de infraestructura público-privada e infraestructura comunitaria?\n¿Es posible aplicar los conceptos de la Arquitectura FLOSS al diseño de infraestructuras a gran escala?\n¿Qué impedimentos políticos, económicos, legislativos y escalares dificultan las infraestructuras comunitarias?\n¿Qué diferencia hay entre los lugares que ocupan las infraestructuras público-privadas y la infraestructura comunitaria?",
-			"styleAttributes":{},
-			"x":-2040,
-			"y":1720,
-			"width":900,
-			"height":120
-		},
-		{
-			"id":"1274cae4faba0e44",
-			"type":"text",
-			"text":"CASO PARADIGMÁTICO\n\nDistribución de fibra óptica en la ciudad vs entorno rural",
-			"styleAttributes":{},
-			"x":-860,
-			"y":1720,
-			"width":260,
-			"height":120
-		},
-		{
-			"id":"ae0bb39f0533a2d3",
-			"type":"text",
-			"text":"CASOS DE ESTUDIO",
-			"styleAttributes":{},
-			"x":-860,
-			"y":2080,
-			"width":260,
-			"height":60
-		},
-		{
-			"id":"a3af6923b0ee51e8",
-			"type":"text",
-			"text":"INFRAESTRUCTURA PPÚBLICO-PRIVADA",
-			"styleAttributes":{},
-			"x":-1390,
-			"y":2220,
-			"width":370,
-			"height":60
-		},
-		{
-			"id":"f0f6e2070604955d",
-			"type":"text",
-			"text":"### GUIFI.NET\n\n-  es un proyecto comunitario creado en 2004 para la extensión de una red de Internet autónoma y gestionada por las/los propia/os usuaria/os que puso su foco en llevar conexión de Internet al entorno rural. Funciona creando una red de descentralizada de nodos (routers) que se conectan entre sí de manera descentralizada en lo que se conoce como una Free Common Network. Su infraestructura incluye nodos de Antenas WiFi que se conectan entre sí haciendo uso del espacio electromagnético libre para las ondas WiFi (2.4 GHz) y por conexiones directas de fibra óptica desplegadas por la cooperativa asociada (necesaria legalmente para obtener licencias) haciendo uso del servicio MARCo ([https://perfi.tel/que-es-el-servicio-marco/](https://perfi.tel/que-es-el-servicio-marco/)) que permite acceder a los conductos y registros de obra civil abiertos por telefónica en la vía pública a aquellos proveedores de Internet que quieran desplegar su propia red: (para consultarlo: [https://avance.digital.gob.es/urbanismo-despliegue-redes/Paginas/acceso-infraestructuras.aspx](https://avance.digital.gob.es/urbanismo-despliegue-redes/Paginas/acceso-infraestructuras.aspx) no me deja entrar con cl@ve?). (También usan soluciones un poco más piratas: [https://youtu.be/gD3HYeD4Lm4?si=Xx71OV2m8TlBuWu6&t=112](https://youtu.be/gD3HYeD4Lm4?si=Xx71OV2m8TlBuWu6&t=112) )  \n    Han tenido movidas con movistar recientemente (2022): [https://bandaancha.eu/articulos/movistar-podra-desmontar-fibra-guifi-net-10323](https://bandaancha.eu/articulos/movistar-podra-desmontar-fibra-guifi-net-10323)",
-			"styleAttributes":{},
-			"x":-440,
-			"y":2360,
-			"width":760,
-			"height":460
-		},
-		{
-			"id":"95dea24c45339cd6",
-			"type":"text",
-			"text":"### MESHTASTIC\n\nmeshtastic : es un proyecto comunitario para la extensión de una red de comunicación de chat por radio autónoma, encriptada y gestionada por usuaria/os. Funciona con un protocolo OpenSource que conecta nodos en malla por LoRa (Low Range) u ondas electromagnéticas de largo alcance que se sitúan en las bandas libres del espectro de radiofrecuencia (En Europa 868MHz) [Básicamente son como walkie-talkies pero que usa un protocolo parecido al P2P de internet en el que se reenvían los mensajes por toda la red pudiendo conectar dos nodos que a priori están fuera de rango, siempre que haya nodos intermedios, NO usa Internet] . Este tipo de telecomunicaciones en malla sin Internet se popularizaron en las protestas de Hong Kong (2019-2021) cuando el gobierno de China corta el acceso a Internet a sus ciudadanos [usaron Bridgefy que funciona por bluetooth pero es lo mismo], en EEUU se está usando actualmente para alertar sobre posibles redadas del ICE evitando el control online y en España cuando ocurre el apagón de 2025, se usa también en el entorno rural para la comunicación en zonas sin cobertura, para senderismo o para trabajos de pastoreo.  \n*también se esta popularizando en España meshcore, que es muy similar a meshtastic pero más reciente y es británico, quizá centrarme en este x no usar otra herramienta estadounidense más? a caso lo british es mejor? Aunque es una infraestructura en ciernes lo valoro como caso ya que es totalmente actual, mientras que [guifi.net](http://guifi.net) es un proyecto consolidado que aunque sigue creciendo ha perdido bastante fuerza de cambio*",
-			"styleAttributes":{},
-			"x":-440,
-			"y":2840,
-			"width":760,
-			"height":480
-		},
-		{
-			"id":"a79cd14bd5e8c2f7",
-			"type":"text",
-			"text":"INFRAESTRUCTURA COMUNITARIA",
-			"styleAttributes":{},
-			"x":-680,
-			"y":2220,
-			"width":360,
-			"height":60
-		},
-		{
-			"id":"016e5a4d16f4e1d9",
-			"type":"text",
-			"text":"#### HIPÓTESIS\nHipótesis: Los procesos de diseño urbano participativo contemporáneos concentran la agencia ciudadana en la capa superficial de instalaciones (edificaciones, espacios públicos), mientras que la capa infraestructural permanece relegada a decisiones tecnocráticas y actores privados, generando una asimetría en la capacidad de intervención ciudadana que reproduce desigualdades territoriales y limita el derecho a la ciudad. Las iniciativas de infraestructura descentralizada de telecomunicaciones (Guifi.net, Meshtastic) representan modelos alternativos que enfrentan barreras legislativas, económicas y de opacidad informativa, pero demuestran la viabilidad de una \"Infraestructura Abierta\" gestionada colectivamente.\n\nHipótesis secundarias:\n\n1. La privatización y mercantilización de infraestructuras de telecomunicaciones genera brechas territoriales que el modelo centralizado no resuelve eficientemente\n    \n2. La falta de acceso a datos geoespaciales sobre infraestructura existente constituye una barrera material para la participación ciudadana en este nivel\n    \n3. Los marcos legislativos actuales están diseñados para actores corporativos, no para iniciativas comunitarias de infraestructura\n    \n4. [guifi.net](http://guifi.net) y meshtastic son ejemplos de infraestructura superficial que supera las limitaciones de la infraestructura bajo tierra democratizando el acceso colectivo al diseño y construcción de infraestructura. [guifi.net](http://guifi.net) también da claves de como participar en la infraestructura underground de manera colectiva.",
-			"styleAttributes":{},
-			"x":-2980,
-			"y":920,
-			"width":840,
-			"height":600
-		},
-		{
-			"id":"f20232508741da2b",
-			"type":"text",
-			"text":"#### OBJETIVOS\nObjetivo general:  \nAnalizar (a través del cartografiado y mapeado *** ) las limitaciones estructurales que enfrenta la participación ciudadana en la planificación de infraestructuras urbanas de telecomunicaciones y la viabilidad y potencialidad de dos proyectos a gran escala gestionados de manera comunitaria que resuelven esas limitaciones y devuelven la agencia al/a ciudadana/o.  \n  \nProponer el concepto de \"Free Infrastructure\" como como extensión del paradigma FLOSS (Free Software, Free Hardware, Free Network (cita: Eben Moglen) al urbanismo, estableciendo sus características, potenciales y limitaciones. Continuando con la herencia de la Arquitectura FLOSS (Tesis de Enrique Espinosa) [que habla de como los estudios post-crisis compartían “recetas” constructivas y arquitectónicas libremente para que cualquiera las usase aplicando el concepto de OpenSource e integraba la participación ciudadana como una forma de hacer diseños comunitarios, situados y coherentes con quien los habitaban] Esta Free Infrastructure aplica esos conceptos a la Infraestructura en general, por un lado tratando de hacer públicos aquellos datos que hoy son privados y demostrando la necesidad de tomar agencia ciudadana sobre su gestión (Intersticio de Stengers). Urban commons (citar Elinor Ostrom? )\n\nObjetivos específicos:\n\n1. Mapear la infraestructura de telecomunicaciones público/privada, de [guifi.net](http://guifi.net) y de meshtastic en el territorio elegido.\n    \n2. Documentar los modelos organizativos, técnicos y de gobernanza de Guifi.net y Meshtastic como casos de infraestructura descentralizada\n    \n3. Identificar las barreras políticas, económicas, legislativas, escalares y de acceso a información que enfrentan estas iniciativas frente a modelos corporativos centralizados\n    \n4. Analizar las implicaciones de la opacidad informativa sobre infraestructuras en la capacidad de agencia política ciudadana",
-			"styleAttributes":{},
-			"x":-2980,
-			"y":1540,
-			"width":840,
-			"height":780
-		},
-		{
-			"id":"89824a2ac201cdce",
-			"type":"text",
-			"text":"#### METODOLOGÍA\n**Cartografía positiva vs negativa**:  Cartografía positiva es cartografiar lo que se puede conocer (Los nodos de la red guifi, de la red de meshtastic, los cables submarinos de fibra optica internacionales, las redes privadas de aquellos ISP que las publiquen)  \nCartografía negativa sería cartografiar aquello que esta oculto y privatizado (ya que no se puede conocer, sería interesante evidenciarlo) → **critical cartography **\n  \nEstos mapas se recogerán en una web de público acceso\n\n::bibliografía::\n\nhackarquitectura\n300000kms\nForensic Architecture",
-			"styleAttributes":{},
-			"x":-2980,
-			"y":2360,
-			"width":840,
-			"height":400
-		},
-		{
-			"id":"f757f8fb53ea8895",
-			"type":"text",
-			"text":"Mapas de la cobertura de red de Internet públicos:\n\nINALÁMBRICA\n\n- [https://wigle.net/](https://wigle.net/) Es un mapa de todos los dispositivos WiFi, Bluetooth y 3G,4G,5G conectados a Internet geolocalizados, se construye con el esfuerzo colectivo de usuaries voluntaries que realizan escáners de red y lo suben al proyecto)\n\n  \n\n- todos los mapas del ministerio: [https://portalayudas.digital.gob.es/InfraestructurasDigitales/Descripcion/Paginas/reutilizacion-infraestructuras.aspx](https://portalayudas.digital.gob.es/InfraestructurasDigitales/Descripcion/Paginas/reutilizacion-infraestructuras.aspx) \n    \n\n  \n-[https://experience.arcgis.com/experience/e97b58724a4c4e2e84470e733bd2746d/page/Inal%C3%A1mbrica](https://experience.arcgis.com/experience/e97b58724a4c4e2e84470e733bd2746d/page/Inal%C3%A1mbrica) registro del ministerio de la cobertura de red cableada e inalámbrica por parcela catastral \n\n  \n-[https://experience.arcgis.com/experience/8f319e778b924f2ab790e9e1f7b0c76d/page/5G](https://experience.arcgis.com/experience/8f319e778b924f2ab790e9e1f7b0c76d/page/5G)  \nregistro del ministerio de la cobertura de red móvil 4G y 5G geolocalizados\n\n-[https://prod.adb.col.movistar.es/content/dam/movistar/sp/template/mapa-cobertura/index.html](https://prod.adb.col.movistar.es/content/dam/movistar/sp/template/mapa-cobertura/index.html) cobertura movistar móvil geolozalizados\n\n[https://www.nperf.com/es/map/ES/-/168904.MasMovilYoigo-Movil/signal?ll=41.994456721579816&lg=2.0860290527343754&zoom=11](https://www.nperf.com/es/map/ES/-/168904.MasMovilYoigo-Movil/signal?ll=41.994456721579816&lg=2.0860290527343754&zoom=11) cobertura móvil de varias compañías recogidas por usuaries de nPerf  \n  \nCABLEADA  \n  \n[https://avancedigital.maps.arcgis.com/apps/webappviewer/index.html?id=0ac10917cf3d47fc91b6113ea92c9506](https://avancedigital.maps.arcgis.com/apps/webappviewer/index.html?id=0ac10917cf3d47fc91b6113ea92c9506) mapa de zonas blancas y grises del territorio español (Las zonas blancas son aquellas que no tienen cobertura de redes de banda ancha, ni tampoco tienen previsión para recibirla por parte de un operador en un plazo de tres años con base a planes de inversión creíbles. En el caso de las zonas grises, estas son aquellas que solo tienen cobertura de banda ancha de nueva generación o previsión para recibir instalación en un plazo de tres años por parte de un único operador. sacado de: [https://www.adslzone.net/operadores/en-detalle/zonas-blancas-grises-cobertura-fibra/](https://www.adslzone.net/operadores/en-detalle/zonas-blancas-grises-cobertura-fibra/) )\n\n- [https://www.lyntia.com/red-fibra-optica/](https://www.lyntia.com/red-fibra-optica/) - red de fibra optica instalada por lyntia (Unión Fenosa y Gas Natural – hoy Naturgy)\n\n[https://www.reintel.es/es/infraestructuras/mapa-red](https://www.reintel.es/es/infraestructuras/mapa-red) - mapa de topología de red de fibra optica oscura (a escala nacional) gestionada por reintel  \n  \n\n  \n- [https://www.submarinecablemap.com/](https://www.submarinecablemap.com/) cable de mapas submarinos incluidos de internet geolocalizados\n\n  \n[https://datos.gob.es/es/catalogo/e05068901-base-de-datos-historica-desde-2013-a2020-de-cobertura-banda-ancha-fija-y-movil](https://datos.gob.es/es/catalogo/e05068901-base-de-datos-historica-desde-2013-a2020-de-cobertura-banda-ancha-fija-y-movil) Datos de cobertura ( porcentaje tabla excel por municipio) de banda ancha fija y movil del gob, con un comentario interesante sobre la proteccion de datos y por qué no se pormenoriza\n\n  \n  \n\n  \n  \n  \n\n// infraestructura subterránea\n\n  \n\n[https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/visor_din.iam?clave=VISOR_IDE&ArcGIS=https://sigma.madrid.es/hosted/rest/services/CARTOGRAFIA/TUNELES/MapServer](https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/visor_din.iam?clave=VISOR_IDE&ArcGIS=https://sigma.madrid.es/hosted/rest/services/CARTOGRAFIA/TUNELES/MapServer) mapa túneles de madrid  \n[https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=55d2dbee-184e-11eb-86d9-98e7f4edb47e](https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=55d2dbee-184e-11eb-86d9-98e7f4edb47e)  \n([https://www.youtube.com/watch?v=sA_41LTiv-4](https://www.youtube.com/watch?v=sA_41LTiv-4) )  \n  \n//Otras noticias sobre guifi.net  \n  \n[https://www.xatakamovil.com/conectividad/guifi-net-aumenta-su-red-de-fibra-optica-con-una-donacion-por-parte-de-bankia](https://www.xatakamovil.com/conectividad/guifi-net-aumenta-su-red-de-fibra-optica-con-una-donacion-por-parte-de-bankia) Bankia dona fibra a guifi (2013)  \n  \nsestaferia (cooperativa asociada con [guifi.net](http://guifi.net) lleva internet a partes rurales de Asturies: [https://sestaferia.net/](https://sestaferia.net/)  [https://www.xataka.com/servicios/de-la-fibra-de-500-mb-a-las-cooperativas-para-tener-internet-en-la-montana-asi-son-las-redes-municipales-de-banda-ancha](https://www.xataka.com/servicios/de-la-fibra-de-500-mb-a-las-cooperativas-para-tener-internet-en-la-montana-asi-son-las-redes-municipales-de-banda-ancha)",
-			"styleAttributes":{},
-			"x":-1635,
-			"y":2440,
-			"width":860,
-			"height":1440
-		},
-		{
-			"id":"a5cc362fbcc9e1fb",
-			"type":"text",
-			"text":" guifi.net : cartografía histórica de la evolución de nodos en el territorio, si es posible determinar los enlaces (En proceso)  \n[https://pdf.sciencedirectassets.com/271990/1-s2.0-S1389128615X00193/1-s2.0-S1389128615003436/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIH9CPW0V9i2WPqem0%2BA7quHN%2FBe2XeNBafHlHxvoZpNRAiBQyJpA%2FN6buAxp34Qn7UlITCilt5s9nrk6RnI0nW4G%2Fyq8BQiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAUaDDA1OTAwMzU0Njg2NSIMaXkuUDhcHNRkPdZ6KpAFYuGJ6FdchFeovTnY0N7Sdx16pdBoHv4pzNsAu%2B9Bs6g0ax105elY7dDqoMURJB0yXPsMO%2BBPmdnS%2BszdX20LqDH5JMJXRhnJijkLQ2ZEZuY67A1%2BUQa7YBKzW70rowX5kxPiyyFl78LzqTHVxwvB%2Bcd8MOiJ%2FKrja0DVTlTpBHy9VAyuna3X%2BgEg2lnwcC%2BnXkX7QjiGubBUqcs2d7aJ0GkjmcankDuGRIX0K3iNUYUGaaTOVgFzgxH0DX2Tl840xfdROB4o5b6sJypgKUXcXMyBQ92TzcoBmUIxQGIEEIAUxYWzyAWNxQGlJiKoV%2BItkMBpPqbg4SwcrFxu6diWETPqsuqT6sbC%2BgSdPkzRVqLQ4HTrQ6b6iAwT04KYoYK0lV%2FiunF7VzOBExOeepE4EQWiYsnVEdY%2BiWNSlSzmGblxgn9Ydjyh4CyS%2BL1Hfj2Vti84c23bKcZ11hAE6mbEG0JoOhhAuh1qVXlMCFXTonenTuk%2BqIpgLm48SSjGYxcUyqtjkgpLKCbFUFpwlaz5LyNl5379oQC0pMlXw0NcOlkaStqdv8ptplSZNNOFgaETPtgLzp%2FiKY4gRw33N8xEyVhFALNhxdaclBFABFgt%2B3FMfsqEw6UEodLFctpzUxGXHsSPgWVWC2WB3Boc92%2FL6KfY32BCcDMUExdolk5XMkjJ5vAqpFXUqutAbVCG9U6vX%2BkYJZ%2FTVTYLY5jl7fOVUhJSpNDejxVX9vZcCkdH4z0%2F3Y1zUAa1EedBbjAUI1vQDBcjiP1FvWHb6HCF%2BEDAp6roOwQ77rJth271wL1lwIN9VhnwCzrbHSqRHDDJIR6k6PVt2px3gis8t7FJOcAqTlr2RJRCEJqaFomF6L%2FCev8w1vumzAY6sgGsmVfSR1S675DAyhfKsnEsN5hVnCVjWRvXj%2BxorfFpAbcHXNsfllBZIcG9PlFjD9IwQzXe%2FY4lYvKv3vyx78pH2ij1wIWJjb7B6ihN8AmizFyMgKFPAiRqX3e81kyfBTtH062tKAt4b%2F4LpmkIEKZViSsWV3e%2BOdpEJviAwHTPFjW%2FF7X%2BhzNp4nprHG2wQwV376lv9FrFqa9TGhMXpC0pd79RL5HglMBwcupC2bBJUBgz&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260209T113202Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYVMU42L4T%2F20260209%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=258dc03dac84cbb7bbfe008a7f422153afddf73b4770163707b637a62863466b&hash=8ed5156fa99421de73d5b10426dff4eed1b586fd7c31aacd42ea7dca210a1ea6&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1389128615003436&tid=spdf-6f611027-a78e-44d6-8b23-5012deca7944&sid=40339c58374b43412f5a5847c961462417d5gxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=031758020d535e055258&rr=9cb30b3898728c07&cc=es](https://pdf.sciencedirectassets.com/271990/1-s2.0-S1389128615X00193/1-s2.0-S1389128615003436/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIH9CPW0V9i2WPqem0%2BA7quHN%2FBe2XeNBafHlHxvoZpNRAiBQyJpA%2FN6buAxp34Qn7UlITCilt5s9nrk6RnI0nW4G%2Fyq8BQiM%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAUaDDA1OTAwMzU0Njg2NSIMaXkuUDhcHNRkPdZ6KpAFYuGJ6FdchFeovTnY0N7Sdx16pdBoHv4pzNsAu%2B9Bs6g0ax105elY7dDqoMURJB0yXPsMO%2BBPmdnS%2BszdX20LqDH5JMJXRhnJijkLQ2ZEZuY67A1%2BUQa7YBKzW70rowX5kxPiyyFl78LzqTHVxwvB%2Bcd8MOiJ%2FKrja0DVTlTpBHy9VAyuna3X%2BgEg2lnwcC%2BnXkX7QjiGubBUqcs2d7aJ0GkjmcankDuGRIX0K3iNUYUGaaTOVgFzgxH0DX2Tl840xfdROB4o5b6sJypgKUXcXMyBQ92TzcoBmUIxQGIEEIAUxYWzyAWNxQGlJiKoV%2BItkMBpPqbg4SwcrFxu6diWETPqsuqT6sbC%2BgSdPkzRVqLQ4HTrQ6b6iAwT04KYoYK0lV%2FiunF7VzOBExOeepE4EQWiYsnVEdY%2BiWNSlSzmGblxgn9Ydjyh4CyS%2BL1Hfj2Vti84c23bKcZ11hAE6mbEG0JoOhhAuh1qVXlMCFXTonenTuk%2BqIpgLm48SSjGYxcUyqtjkgpLKCbFUFpwlaz5LyNl5379oQC0pMlXw0NcOlkaStqdv8ptplSZNNOFgaETPtgLzp%2FiKY4gRw33N8xEyVhFALNhxdaclBFABFgt%2B3FMfsqEw6UEodLFctpzUxGXHsSPgWVWC2WB3Boc92%2FL6KfY32BCcDMUExdolk5XMkjJ5vAqpFXUqutAbVCG9U6vX%2BkYJZ%2FTVTYLY5jl7fOVUhJSpNDejxVX9vZcCkdH4z0%2F3Y1zUAa1EedBbjAUI1vQDBcjiP1FvWHb6HCF%2BEDAp6roOwQ77rJth271wL1lwIN9VhnwCzrbHSqRHDDJIR6k6PVt2px3gis8t7FJOcAqTlr2RJRCEJqaFomF6L%2FCev8w1vumzAY6sgGsmVfSR1S675DAyhfKsnEsN5hVnCVjWRvXj%2BxorfFpAbcHXNsfllBZIcG9PlFjD9IwQzXe%2FY4lYvKv3vyx78pH2ij1wIWJjb7B6ihN8AmizFyMgKFPAiRqX3e81kyfBTtH062tKAt4b%2F4LpmkIEKZViSsWV3e%2BOdpEJviAwHTPFjW%2FF7X%2BhzNp4nprHG2wQwV376lv9FrFqa9TGhMXpC0pd79RL5HglMBwcupC2bBJUBgz&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260209T113202Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYVMU42L4T%2F20260209%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=258dc03dac84cbb7bbfe008a7f422153afddf73b4770163707b637a62863466b&hash=8ed5156fa99421de73d5b10426dff4eed1b586fd7c31aacd42ea7dca210a1ea6&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1389128615003436&tid=spdf-6f611027-a78e-44d6-8b23-5012deca7944&sid=40339c58374b43412f5a5847c961462417d5gxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=031758020d535e055258&rr=9cb30b3898728c07&cc=es)",
-			"styleAttributes":{},
-			"x":440,
-			"y":2510,
-			"width":880,
-			"height":160
-		},
-		{
-			"id":"c7d9eab8c9367165",
-			"type":"text",
-			"text":"- Meshtastic: cartografías de nodos y enlaces (ya hay dos bastante interesantes: [https://meshtastic.liamcottle.net/?lat=38.905960336495866&lng=354.89910392956654&zoom=8](https://meshtastic.liamcottle.net/?lat=38.905960336495866&lng=354.89910392956654&zoom=8) (meshtastic map, nodos geolocalizados subidos por usuaries por lo que no aparecen todos )  \n[https://meshview.meshtastic.es/map](https://meshview.meshtastic.es/map) (lo mismo pero en españa especificamente)  \n[https://malla.meshtastic.es/traceroute-graph](https://malla.meshtastic.es/traceroute-graph) (graphView de rutas y enlaces entre nodos en España)",
-			"styleAttributes":{},
-			"x":440,
-			"y":3000,
-			"width":840,
-			"height":160
-		}
-	],
-	"edges":[
-		{
-			"id":"7beae84c41e3ee44",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"783d5055d8571dd1",
-			"fromSide":"right",
-			"toNode":"21d1b4572e618368",
-			"toSide":"left"
-		},
-		{
-			"id":"9d6c02a18b87623a",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"783d5055d8571dd1",
-			"fromSide":"right",
-			"toNode":"52664eb06b45d1d3",
-			"toSide":"left"
-		},
-		{
-			"id":"d97eee49980ec709",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromFloating":false,
-			"fromNode":"783d5055d8571dd1",
-			"fromSide":"bottom",
-			"toNode":"73fd2aafea29ba20",
-			"toSide":"top"
-		},
-		{
-			"id":"5587a320542e4b5d",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"dcd3c89d98000649",
-			"fromSide":"bottom",
-			"toNode":"1da0532163509216",
-			"toSide":"top"
-		},
-		{
-			"id":"4ae4080589f72ea6",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"52664eb06b45d1d3",
-			"fromSide":"right",
-			"toNode":"1da0532163509216",
-			"toSide":"left"
-		},
-		{
-			"id":"d9ec1e80686c3da9",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"21d1b4572e618368",
-			"fromSide":"right",
-			"toNode":"e89a0ac856ca4d22",
-			"toSide":"left"
-		},
-		{
-			"id":"b8b0e643dbf301ee",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1da0532163509216",
-			"fromSide":"bottom",
-			"toNode":"e89a0ac856ca4d22",
-			"toSide":"top"
-		},
-		{
-			"id":"fe1d0c4a67c3c7fe",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"e89a0ac856ca4d22",
-			"fromSide":"bottom",
-			"toNode":"90c90bb36475ec11",
-			"toSide":"top"
-		},
-		{
-			"id":"e7434c5c6e73f2d2",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"e89a0ac856ca4d22",
-			"fromSide":"right",
-			"toNode":"2fd9e2f52a0eb89e",
-			"toSide":"left"
-		},
-		{
-			"id":"87b3ca5d39b686d0",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromFloating":false,
-			"fromNode":"2fd9e2f52a0eb89e",
-			"fromSide":"right",
-			"toNode":"d4fc73d68e1f788e",
-			"toSide":"left"
-		},
-		{
-			"id":"be6e2b995a2c2e2e",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"d4fc73d68e1f788e",
-			"fromSide":"right",
-			"toNode":"a6d4c726b44f0b76",
-			"toSide":"left"
-		},
-		{
-			"id":"b9e36faf5e552dfa",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"d4fc73d68e1f788e",
-			"fromSide":"right",
-			"toNode":"6c0c5369a64d2227",
-			"toSide":"left"
-		},
-		{
-			"id":"9fb5d665807ef877",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"d4fc73d68e1f788e",
-			"fromSide":"right",
-			"toNode":"1330c4d0c2aaeaf0",
-			"toSide":"left"
-		},
-		{
-			"id":"eb88e94f0f220c08",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"2fd9e2f52a0eb89e",
-			"fromSide":"right",
-			"toNode":"1bf9536a0aac8f2b",
-			"toSide":"left"
-		},
-		{
-			"id":"492037eea2cabdb6",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1bf9536a0aac8f2b",
-			"fromSide":"right",
-			"toNode":"b6f6f480d9521f0d",
-			"toSide":"left"
-		},
-		{
-			"id":"2e5a26e527d22ec2",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"2fd9e2f52a0eb89e",
-			"fromSide":"right",
-			"toNode":"8bee07f6b187b4df",
-			"toSide":"left"
-		},
-		{
-			"id":"978d02d1476c5234",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"2fd9e2f52a0eb89e",
-			"fromSide":"bottom",
-			"toNode":"90030746cefbc4b1",
-			"toSide":"top"
-		},
-		{
-			"id":"b8a254b7a681f9b4",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"8bee07f6b187b4df",
-			"fromSide":"right",
-			"toNode":"43eb2ad9ae890315",
-			"toSide":"left"
-		},
-		{
-			"id":"66acfd402efa50d1",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1bf9536a0aac8f2b",
-			"fromSide":"right",
-			"toNode":"ef010c1688107c7d",
-			"toSide":"left"
-		},
-		{
-			"id":"7f86eb72c8b16da5",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromFloating":false,
-			"fromNode":"43eb2ad9ae890315",
-			"fromSide":"bottom",
-			"toNode":"1274cae4faba0e44",
-			"toSide":"top"
-		},
-		{
-			"id":"aa219d0f3cfd4b47",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1274cae4faba0e44",
-			"fromSide":"right",
-			"toNode":"190cffe860a495f5",
-			"toSide":"left"
-		},
-		{
-			"id":"fe42004007d4cc18",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1274cae4faba0e44",
-			"fromSide":"left",
-			"toNode":"1642a305cc86f01d",
-			"toSide":"right"
-		},
-		{
-			"id":"75d246d25e989d67",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"1274cae4faba0e44",
-			"fromSide":"bottom",
-			"toNode":"ae0bb39f0533a2d3",
-			"toSide":"top"
-		},
-		{
-			"id":"eb9220893dc4932a",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"ae0bb39f0533a2d3",
-			"fromSide":"bottom",
-			"toNode":"a3af6923b0ee51e8",
-			"toSide":"top"
-		},
-		{
-			"id":"a0400012a4d6802f",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"ae0bb39f0533a2d3",
-			"fromSide":"bottom",
-			"toNode":"a79cd14bd5e8c2f7",
-			"toSide":"top"
-		},
-		{
-			"id":"c88c8838048064dd",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"a79cd14bd5e8c2f7",
-			"fromSide":"bottom",
-			"toNode":"f0f6e2070604955d",
-			"toSide":"left"
-		},
-		{
-			"id":"595a5adf173dee14",
-			"styleAttributes":{"pathfindingMethod":"square"},
-			"toFloating":false,
-			"fromNode":"a79cd14bd5e8c2f7",
-			"fromSide":"bottom",
-			"toNode":"95dea24c45339cd6",
-			"toSide":"left"
-		},
-		{
-			"id":"168aafdd83a37a39",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"f0f6e2070604955d",
-			"fromSide":"right",
-			"toNode":"a5cc362fbcc9e1fb",
-			"toSide":"left"
-		},
-		{
-			"id":"3698bb887b98b436",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"95dea24c45339cd6",
-			"fromSide":"right",
-			"toNode":"c7d9eab8c9367165",
-			"toSide":"left"
-		},
-		{
-			"id":"d0a3b1a4c11b6a3a",
-			"styleAttributes":{},
-			"toFloating":false,
-			"fromNode":"a3af6923b0ee51e8",
-			"fromSide":"bottom",
-			"toNode":"f757f8fb53ea8895",
-			"toSide":"top"
-		}
-	],
-	"metadata":{
-		"version":"1.0-1.0",
-		"frontmatter":{}
-	}
-};
+      // Datos del canvas embebidos
+      let canvasData;
 
-        // Variables de estado
-        let scale = 1;
-        let translateX = 0;
-        let translateY = 0;
-        let isDragging = false;
-        let startX = 0;
-        let startY = 0;
+      // Variables de estado
+      let scale = 1;
+      let translateX = 0;
+      let translateY = 0;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
 
-        // Función para parsear markdown básico
-        function parseMarkdown(text) {
-            let html = text;
-            
-            // Headers
-            html = html.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
-            html = html.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
-            html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
-            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-            
-            // Bold
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            // Italic
-            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            
-            // Links [text](url)
-            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-            
-            // URLs sueltas
-            html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-            
-            // Line breaks
-            html = html.replace(/\n/g, '<br>');
-            
-            return html;
-        }
+      // Cargar el archivo .canvas dinámicamente
+      async function loadCanvasData() {
+        try {
+          const canvasFiles = ["D_Primer Paper.canvas"];
 
-        // Función para obtener el punto de conexión de un nodo
-        function getConnectionPoint(node, side) {
-            const x = node.x;
-            const y = node.y;
-            const w = node.width;
-            const h = node.height;
-            
-            switch(side) {
-                case 'top': return { x: x + w/2, y: y };
-                case 'bottom': return { x: x + w/2, y: y + h };
-                case 'left': return { x: x, y: y + h/2 };
-                case 'right': return { x: x + w, y: y + h/2 };
-                default: return { x: x + w/2, y: y + h/2 };
+          for (const filename of canvasFiles) {
+            try {
+              const response = await fetch(`../canvas/${filename}`);
+              if (response.ok) {
+                canvasData = await response.json();
+                renderCanvas();
+                resetView();
+                return;
+              }
+            } catch (e) {
+              console.log(`Could not load ${filename}:`, e);
             }
+          }
+
+          console.error("Could not load any canvas file");
+        } catch (error) {
+          console.error("Error loading canvas data:", error);
+        }
+      }
+
+      // Función para parsear markdown básico
+      function parseMarkdown(text) {
+        let html = text;
+
+        // Links [text](url)
+        html = html.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank">$1</a>',
+        );
+
+        // Headers
+        html = html.replace(/^###### (.*$)/gim, "<h6>$1</h6>");
+        html = html.replace(/^##### (.*$)/gim, "<h5>$1</h5>");
+        html = html.replace(/^#### (.*$)/gim, "<h4>$1</h4>");
+        html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+        html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+        html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+        // Bold
+        html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+        // Italic
+        html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+        // Line breaks
+        html = html.replace(/\n/g, "<br>");
+
+        return html;
+      }
+
+      // Función para obtener el punto de conexión de un nodo
+      function getConnectionPoint(node, side) {
+        const x = node.x;
+        const y = node.y;
+        const w = node.width;
+        const h = node.height;
+
+        switch (side) {
+          case "top":
+            return { x: x + w / 2, y: y };
+          case "bottom":
+            return { x: x + w / 2, y: y + h };
+          case "left":
+            return { x: x, y: y + h / 2 };
+          case "right":
+            return { x: x + w, y: y + h / 2 };
+          default:
+            return { x: x + w / 2, y: y + h / 2 };
+        }
+      }
+
+      // Función para dibujar una línea (edge)
+      function drawEdge(edge) {
+        const fromNode = canvasData.nodes.find((n) => n.id === edge.fromNode);
+        const toNode = canvasData.nodes.find((n) => n.id === edge.toNode);
+
+        if (!fromNode || !toNode) return "";
+
+        const from = getConnectionPoint(fromNode, edge.fromSide);
+        const to = getConnectionPoint(toNode, edge.toSide);
+
+        const pathMethod = edge.styleAttributes?.pathfindingMethod || "direct";
+
+        let pathData;
+        if (pathMethod === "square") {
+          // Ruta con ángulos rectos
+          const midX = (from.x + to.x) / 2;
+          const midY = (from.y + to.y) / 2;
+
+          // primera parte del path en funcion de la dirección de salida del nodo origen
+          if (edge.fromSide === "left" || edge.fromSide === "right") {
+            pathData = `M ${from.x} ${from.y} L ${midX} ${from.y}`;
+          } else {
+            pathData = `M ${from.x} ${from.y} L ${from.x} ${midY}`;
+          }
+
+          // segunda parte del path en funcion de la dirección de entrada del nodo destino
+          if (edge.toSide === "left" || edge.toSide === "right") {
+            pathData += ` L ${midX} ${to.y} L ${to.x} ${to.y}`;
+          } else {
+            pathData += ` L ${to.x} ${midY} L ${to.x} ${to.y}`;
+          }
+        } else {
+          // Línea directa con curva de Bézier cúbica
+          const curvefactor = 0.55;
+
+          // detectar entrada en nodo destino para restar tamaño de flecha
+          let toXmod = 0;
+          let toYmod = 0;
+          if (edge.toSide === "left") {
+            toXmod = -20;
+          } else if (edge.toSide === "right") {
+            toXmod = 20;
+          } else if (edge.toSide === "top") {
+            toYmod = -20;
+          } else if (edge.toSide === "bottom") {
+            toYmod = 20;
+          }
+
+          // Puntos de control basados en la dirección de salida/entrada
+          let ctrl1X = from.x;
+          let ctrl1Y = from.y;
+          let ctrl2X = to.x+toXmod;
+          let ctrl2Y = to.y+toYmod;
+
+          // Primer punto de control (salida del nodo origen)
+          if (edge.fromSide === "left" || edge.fromSide === "right") {
+            ctrl1X = from.x + (to.x + toXmod - from.x) * curvefactor;
+            ctrl1Y = from.y;
+          } else {
+            ctrl1X = from.x;
+            ctrl1Y = from.y + (to.y + toYmod - from.y) * curvefactor;
+          }
+
+          // Segundo punto de control (entrada al nodo destino)
+          if (edge.toSide === "left" || edge.toSide === "right") {
+            ctrl2X = to.x + toXmod - (to.x + toXmod - from.x) * 0.25;
+            ctrl2Y = to.y + toYmod;
+          } else {
+            ctrl2X = to.x + toXmod;
+            ctrl2Y = to.y + toYmod - (to.y + toYmod - from.y) * 0.25;
+          }
+
+          pathData = `M ${from.x} ${from.y} C ${ctrl1X} ${ctrl1Y}, ${ctrl2X} ${ctrl2Y}, ${to.x + toXmod} ${to.y + toYmod} L ${to.x} ${to.y}`;
         }
 
-        // Función para dibujar una línea (edge)
-        function drawEdge(edge) {
-            const fromNode = canvasData.nodes.find(n => n.id === edge.fromNode);
-            const toNode = canvasData.nodes.find(n => n.id === edge.toNode);
-            
-            if (!fromNode || !toNode) return '';
-            
-            const from = getConnectionPoint(fromNode, edge.fromSide);
-            const to = getConnectionPoint(toNode, edge.toSide);
-            
-            const pathMethod = edge.styleAttributes?.pathfindingMethod || 'direct';
-            
-            let pathData;
-            if (pathMethod === 'square') {
-                // Ruta con ángulos rectos
-                const midX = (from.x + to.x) / 2;
-                pathData = `M ${from.x} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${to.x} ${to.y}`;
-            } else {
-                // Línea directa
-                pathData = `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+        return `<path class="edge" d="${pathData}" marker-end="url(#arrowhead)" />`;
+      }
+
+      // Función para renderizar el canvas
+      function renderCanvas() {
+        if (!canvasData) return;
+
+        const nodesContainer = document.getElementById("nodes");
+        const edgesContainer = document.getElementById("edges");
+
+        // Limpiar contenedores
+        nodesContainer.innerHTML = "";
+
+        // Renderizar grupos primero (para que estén debajo)
+        canvasData.nodes
+          .filter((node) => node.type === "group")
+          .forEach((node) => {
+            const nodeEl = document.createElement("div");
+            nodeEl.className = "node group";
+            nodeEl.style.left = node.x + "px";
+            nodeEl.style.top = node.y + "px";
+            nodeEl.style.width = node.width + "px";
+            nodeEl.style.height = node.height + "px";
+
+            if (node.label && node.label.trim()) {
+              const label = document.createElement("div");
+              label.className = "group-label";
+              label.textContent = node.label;
+              nodeEl.appendChild(label);
             }
-            
-            return `<path class="edge" d="${pathData}" marker-end="url(#arrowhead)" />`;
-        }
 
-        // Función para renderizar el canvas
-        function renderCanvas() {
-            if (!canvasData) return;
-            
-            const nodesContainer = document.getElementById('nodes');
-            const edgesContainer = document.getElementById('edges');
-            
-            // Limpiar contenedores
-            nodesContainer.innerHTML = '';
-            
-            // Renderizar grupos primero (para que estén debajo)
-            canvasData.nodes
-                .filter(node => node.type === 'group')
-                .forEach(node => {
-                    const nodeEl = document.createElement('div');
-                    nodeEl.className = 'node group';
-                    nodeEl.style.left = node.x + 'px';
-                    nodeEl.style.top = node.y + 'px';
-                    nodeEl.style.width = node.width + 'px';
-                    nodeEl.style.height = node.height + 'px';
-                    
-                    if (node.label && node.label.trim()) {
-                        const label = document.createElement('div');
-                        label.className = 'group-label';
-                        label.textContent = node.label;
-                        nodeEl.appendChild(label);
-                    }
-                    
-                    nodesContainer.appendChild(nodeEl);
-                });
-            
-            // Renderizar nodos de texto
-            canvasData.nodes
-                .filter(node => node.type === 'text')
-                .forEach(node => {
-                    const nodeEl = document.createElement('div');
-                    nodeEl.className = 'node';
-                    nodeEl.style.left = node.x + 'px';
-                    nodeEl.style.top = node.y + 'px';
-                    nodeEl.style.width = node.width + 'px';
-                    nodeEl.style.height = node.height + 'px';
-                    
-                    // Aplicar estilos adicionales
-                    if (node.styleAttributes?.textAlign) {
-                        nodeEl.classList.add('text-' + node.styleAttributes.textAlign);
-                    }
-                    
-                    // Parsear markdown y agregar contenido
-                    nodeEl.innerHTML = parseMarkdown(node.text);
-                    
-                    nodesContainer.appendChild(nodeEl);
-                });
-            
-            // Agregar definición de marcador de flecha
-            let edgesHTML = `
+            nodesContainer.appendChild(nodeEl);
+          });
+
+        // Renderizar nodos de texto
+        canvasData.nodes
+          .filter((node) => node.type === "text")
+          .forEach((node) => {
+            const nodeEl = document.createElement("div");
+            nodeEl.className = "node";
+            nodeEl.style.left = node.x + "px";
+            nodeEl.style.top = node.y + "px";
+            nodeEl.style.width = node.width + "px";
+            nodeEl.style.height = node.height + "px";
+
+            // Aplicar estilos adicionales
+            if (node.styleAttributes?.textAlign) {
+              nodeEl.classList.add("text-" + node.styleAttributes.textAlign);
+            }
+
+            // Parsear markdown y agregar contenido
+            nodeEl.innerHTML = parseMarkdown(node.text);
+
+            nodesContainer.appendChild(nodeEl);
+          });
+
+        // Agregar definición de marcador de flecha
+        let edgesHTML = `
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
                         <polygon points="0 0, 10 3, 0 6" class="edge-arrow" />
                     </marker>
                 </defs>
             `;
-            
-            // Renderizar edges
-            canvasData.edges.forEach(edge => {
-                edgesHTML += drawEdge(edge);
-            });
-            edgesContainer.innerHTML = edgesHTML;
-        }
 
-        // Funciones de zoom y navegación
-        function updateTransform() {
-            const canvas = document.getElementById('canvas');
-            canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-            document.getElementById('zoom-info').textContent = `Zoom: ${Math.round(scale * 100)}%`;
-        }
+        // Renderizar edges
+        canvasData.edges.forEach((edge) => {
+          edgesHTML += drawEdge(edge);
+        });
+        edgesContainer.innerHTML = edgesHTML;
+      }
 
-        function zoomIn() {
-            scale = Math.min(scale * 1.2, 3);
-            updateTransform();
-        }
+      // Funciones de zoom y navegación
+      function updateTransform() {
+        const canvas = document.getElementById("canvas");
+        canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        document.getElementById("zoom-info").textContent =
+          `Zoom: ${Math.round(scale * 100)}%`;
+      }
 
-        function zoomOut() {
-            scale = Math.max(scale / 1.2, 0.1);
-            updateTransform();
-        }
+      function zoomIn() {
+        const container = document.getElementById("canvas-container");
+        const rect = container.getBoundingClientRect();
+        const mouseX = rect.width / 2;
+        const mouseY = rect.height / 2;
+        applyZoom(1.2, mouseX, mouseY);
+      }
 
-        function resetView() {
-            scale = 0.4;
-            translateX = window.innerWidth / 2;
-            translateY = window.innerHeight / 2;
-            updateTransform();
-        }
+      function zoomOut() {
+        const container = document.getElementById("canvas-container");
+        const rect = container.getBoundingClientRect();
+        const mouseX = rect.width / 2;
+        const mouseY = rect.height / 2;
+        applyZoom(0.833, mouseX, mouseY);
+      }
 
-        // Event listeners para arrastrar el canvas
-        const container = document.getElementById('canvas-container');
+      function applyZoom(factor, mouseX, mouseY) {
+        const newScale = Math.max(0.1, Math.min(3, scale * factor));
         
-        container.addEventListener('touchstart', (e) => {
-            if (e.target === container || e.target.id === 'canvas' || e.target.id === 'nodes' || e.target.id === 'edges' || e.target.className === 'node group') {
-                isDragging = true;
-                const touch = e.touches[0];
-                startX = touch.clientX - translateX;
-                startY = touch.clientY - translateY;
-                container.classList.add('grabbing');
-            }
-        });
+        // Aplicar el zoom hacia el ratón
+        const canvasX = (mouseX - translateX) / scale;
+        const canvasY = (mouseY - translateY) / scale;
+        translateX = mouseX - canvasX * newScale;
+        translateY = mouseY - canvasY * newScale;
+        
+        scale = newScale;
+        updateTransform();
+      }
 
-        container.addEventListener('touchmove', (e) => {
-            if (isDragging) {
-                const touch = e.touches[0];
-                translateX = touch.clientX - startX;
-                translateY = touch.clientY - startY;
-                updateTransform();
-            }
-        });
+      function resetView() {
+        scale = 0.4;
+        translateX = window.innerWidth / 2;
+        translateY = window.innerHeight / 2;
+        updateTransform();
+      }
 
-        container.addEventListener('touchend', () => {
-            isDragging = false;
-            container.classList.remove('grabbing');
-        });
+      // Interactividad
+      const container = document.getElementById("canvas-container");
 
+      function handlePointerDown(clientX, clientY) {
+        isDragging = true;
+        startX = clientX - translateX;
+        startY = clientY - translateY;
+        container.classList.add("grabbing");
+      }
 
-        container.addEventListener('mousedown', (e) => {
-            if (e.target === container || e.target.id === 'canvas' || e.target.id === 'nodes' || e.target.id === 'edges' || e.target.className === 'node group') {
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-                container.classList.add('grabbing');
-            }
-        });
+      function handlePointerMove(clientX, clientY) {
+        if (isDragging) {
+          translateX = clientX - startX;
+          translateY = clientY - startY;
+          updateTransform();
+        }
+      }
 
-        container.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                translateX = e.clientX - startX;
-                translateY = e.clientY - startY;
-                updateTransform();
-            }
-        });
+      function handlePointerUp() {
+        isDragging = false;
+        container.classList.remove("grabbing");
+      }
 
-        container.addEventListener('mouseup', () => {
-            isDragging = false;
-            container.classList.remove('grabbing');
-        });
+      function handleWheel(event) {
+        event.preventDefault();
+        const rect = container.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        const delta = event.deltaY > 0 ? 0.9 : 1.1;
+        applyZoom(delta, mouseX, mouseY);
+      }
 
-        container.addEventListener('mouseleave', () => {
-            isDragging = false;
-            container.classList.remove('grabbing');
-        });
+      // Event Listeners
+      // móvil
+      container.addEventListener("touchstart", (e) => {
+        const touch = e.touches[0];
+        handlePointerDown(touch.clientX, touch.clientY);
+      });
+      container.addEventListener("touchmove", (e) => {
+        const touch = e.touches[0];
+        handlePointerMove(touch.clientX, touch.clientY);
+      });
+      container.addEventListener("touchend", handlePointerUp);
 
-        // Zoom con rueda del ratón
-        container.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? 0.9 : 1.1;
-            scale = Math.max(0.1, Math.min(3, scale * delta));
-            updateTransform();
-        });
+      // pc
+      container.addEventListener("mousedown", (e) => {handlePointerDown(e.clientX, e.clientY);});
+      container.addEventListener("mousemove", (e) => { handlePointerMove(e.clientX, e.clientY);});
+      container.addEventListener("mouseup", handlePointerUp);
+      container.addEventListener("mouseleave", handlePointerUp);
+      container.addEventListener("wheel", handleWheel);
 
-        // Inicializar
-        renderCanvas();
-        resetView();
+      // Inicializar
+      loadCanvasData();
     </script>
-</body>
+  </body>
 </html>
