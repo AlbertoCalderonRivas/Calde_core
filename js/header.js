@@ -4,7 +4,7 @@ const menuLinks = document.querySelectorAll(".navigation a");
 const menuItems = document.querySelectorAll(".navigation li");
 
 const navigationItems = [
-    { href: "/proyectos/WIP", label: "Works", short: "W" },
+    { href: "/index.html", label: "Works", short: "W" },
     { href: "https://calde_core.pages.gay", label: "Experiments", short: "E" },
     { href: "/proyectos/WIP", label: "Blog", short: "B" },
     { href: "/navigation/AboutMe", label: "About Me", short: "A" }
